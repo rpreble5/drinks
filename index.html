@@ -44,6 +44,8 @@ svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-widt
 
 
 ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
+.sect { margin-top: 22px; padding-bottom: 6px; border-bottom: 1px solid var(--line); font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sect:first-child { margin-top: 8px; }
 .drink { padding: 18px 0; border-bottom: 1px dashed var(--line); }
 .row { display: flex; gap: 16px; align-items: flex-start; }
 .gl { width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; flex: none; background: var(--surface); background: color-mix(in srgb, var(--c) 24%, var(--bg)); }
@@ -130,7 +132,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   var DRINKS = [
-    { id: "old-fashioned", name: "Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c9791b", method: "stirred", garnish: "an orange peel",
+    { id: "old-fashioned", name: "Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c9791b", method: "stirred", garnish: "an orange peel", tip: "Try swapping a dash of Angostura for black walnut bitters.",
       taste: "Spirit-forward, lightly sweet and bitter.",
       ing: [I("Bourbon", 2, "oz", BO), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "maple-old-fashioned", name: "Maple Old Fashioned", base: "Whiskey", glass: "rocks", color: "#b8661c", method: "stirred", garnish: "an orange peel",
@@ -181,10 +183,10 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "monte-sour", name: "Monte Sour", base: "Amaro", glass: "rocks", color: "#d9703f", method: "shaken", garnish: "an orange twist",
       taste: "Bittersweet and tart, lower in alcohol.",
       ing: [I("Amaro Montenegro", 1.75, "oz", AM), I("Lemon juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1)] },
-    { id: "full-monte", name: "Full Monte No. 2", base: "Whiskey", glass: "rocks", color: "#a5482a", method: "stirred", garnish: "an orange twist",
+    { id: "full-monte", name: "Full Monte No. 2", base: "Whiskey", glass: "rocks", color: "#a5482a", method: "stirred", garnish: "an orange twist", tip: "Try black walnut bitters in place of the Angostura.",
       taste: "Stirred and bittersweet, amaro-forward.",
       ing: [I("Amaro Montenegro", 2, "oz", AM), I("Bourbon", 1, "oz", BO), I("Angostura bitters", 1, "dash", BT)] },
-    { id: "monte-manhattan", name: "Monte Manhattan", base: "Whiskey", glass: "coupe", color: "#8f3d22", method: "stirred", garnish: "an orange twist",
+    { id: "monte-manhattan", name: "Monte Manhattan", base: "Whiskey", glass: "coupe", color: "#8f3d22", method: "stirred", garnish: "an orange twist", tip: "Try adding a dash of black walnut bitters.",
       taste: "Stirred and rich, sweeter than a Manhattan.",
       ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Bourbon", 1.5, "oz", BO)] },
     { id: "monte-tonic", name: "Monte & Tonic", base: "Amaro", glass: "tall", color: "#e0884a", method: "built", garnish: "an orange slice",
@@ -198,6 +200,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       ing: [I("Amaro Montenegro", 1, "oz", AM), I("Pineapple juice", 4)] }
   ];
   var STORE = "november-back-bar-v6";
+  var PICKS = ["lions-tail", "mai-tai", "monte-whiskey-sour", "monterita"];
   var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila"];
   var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
@@ -312,6 +315,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     else if (d.method === "shaken") t.push(d.glass === "coupe" ? "Shake with ice, then strain into a chilled coupe." : d.glass === "tall" ? "Shake with ice, then strain into a tall glass over fresh ice." : "Shake with ice, then strain over fresh ice.");
     else t.push(top ? "Build over ice, then top with " + top.n.toLowerCase() + " and stir gently." : "Build over ice.");
     if (d.garnish) t.push("Garnish with " + d.garnish + ".");
+    if (d.tip) t.push(d.tip);
     return t.join(" ");
   }
   function detailHTML(d, c) {
@@ -356,7 +360,15 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   }
   function renderMenu() {
     var html = "";
-    shown().forEach(function (d) { html += drinkHTML(d); });
+    if (state.base === "All") {
+      var picks = PICKS.map(function (id) { return DRINKS.filter(function (d) { return d.id === id; })[0]; });
+      html += '<li class="sect" role="presentation">Recommended</li>';
+      picks.forEach(function (d) { html += drinkHTML(d); });
+      html += '<li class="sect" role="presentation">Everything else</li>';
+      DRINKS.forEach(function (d) { if (PICKS.indexOf(d.id) < 0) html += drinkHTML(d); });
+    } else {
+      shown().forEach(function (d) { html += drinkHTML(d); });
+    }
     $("menu").innerHTML = html;
     restoreFocus();
   }
