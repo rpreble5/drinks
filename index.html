@@ -8,7 +8,7 @@
 <style>
 html { color-scheme: light; }
 body { margin: 0; }
-/* Layout: a bare fall menu. Just a shuffle button on top, then the drinks. Warm oat paper, espresso ink, pumpkin accent; each drink keeps its own tinted badge, pills and recipe panel. */
+/* Layout: a bare fall menu. A shuffle button and spirit filter on top, then the drinks. Warm oat paper, espresso ink, pumpkin accent; each drink keeps its own tinted badge, pills and recipe panel. */
 :root {
   --bg: #f8ecdc;
   --surface: #fff8ee;
@@ -19,16 +19,6 @@ body { margin: 0; }
   --accent-ink: #ffffff;
   --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
   --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #1f130c; --surface: #2b1b11; --fg: #f7e8d3; --muted: #c2a487;
-    --line: #4a3322; --accent: #f0933a; --accent-ink: #2a1204; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #1f130c; --surface: #2b1b11; --fg: #f7e8d3; --muted: #c2a487;
-  --line: #4a3322; --accent: #f0933a; --accent-ink: #2a1204; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -44,7 +34,10 @@ svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-widt
 .wrap { max-width: 40rem; margin: 0 auto; }
 
 .head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.quip { color: var(--muted); font-size: .95rem; min-width: 0; }
+.filter { display: flex; gap: 14px; overflow-x: auto; scrollbar-width: none; min-width: 0; max-width: 100%; }
+.filter::-webkit-scrollbar { display: none; }
+.filter button { flex: none; white-space: nowrap; border: 0; border-bottom: 2px solid transparent; background: none; padding: 0; min-height: 36px; font-size: .92rem; color: var(--muted); }
+.filter button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
 .shuffle { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--accent); color: var(--accent-ink); border-radius: 8px; min-height: 44px; padding: 0 18px 0 12px; font-weight: 600; }
 .shuffle .i { width: 22px; height: 22px; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
 .shuffle:hover .i, .shuffle:active .i { transform: rotate(200deg); }
@@ -52,25 +45,25 @@ svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-widt
 
 ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
 .drink { padding: 18px 0; border-bottom: 1px dashed var(--line); }
-.row { display: flex; gap: 14px; align-items: flex-start; }
-.gl { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; flex: none; background: var(--surface); background: color-mix(in srgb, var(--c) 24%, var(--bg)); }
-.gi { position: relative; display: inline-flex; width: 28px; height: 28px; transform-origin: 50% 85%; transition: transform .3s cubic-bezier(.3, 1.6, .5, 1); }
-.gi svg.i { width: 28px; height: 28px; }
+.row { display: flex; gap: 16px; align-items: flex-start; }
+.gl { width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; flex: none; background: var(--surface); background: color-mix(in srgb, var(--c) 24%, var(--bg)); }
+.gi { position: relative; display: inline-flex; width: 38px; height: 38px; transform-origin: 50% 85%; transition: transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+.gi svg.i { width: 38px; height: 38px; }
 .drink.open .gi { transform: rotate(-12deg); }
-.bub { position: absolute; bottom: 6px; width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0; pointer-events: none; }
-.bub:nth-child(2) { left: 12px; }
-.bub:nth-child(3) { left: 15px; }
-.bub:nth-child(4) { left: 13.5px; }
+.bub { position: absolute; bottom: 8px; width: 4px; height: 4px; border-radius: 50%; background: #fff; opacity: 0; pointer-events: none; }
+.bub:nth-child(2) { left: 16px; }
+.bub:nth-child(3) { left: 20.5px; }
+.bub:nth-child(4) { left: 18.5px; }
 .drink.open .bub { animation: rise 1.6s ease-in infinite; }
 .drink.open .bub:nth-child(3) { animation-delay: .5s; }
 .drink.open .bub:nth-child(4) { animation-delay: 1s; }
-@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .9; } 100% { transform: translateY(-10px); opacity: 0; } }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .9; } 100% { transform: translateY(-14px); opacity: 0; } }
 @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-18deg); } 60% { transform: rotate(14deg); } }
 .drink.pop .gi { animation: wiggle .6s ease; }
 
 .toggle { flex: 1; min-width: 0; display: block; background: none; border: 0; padding: 0; text-align: left; color: inherit; }
-.name { display: flex; align-items: center; gap: 6px; font: 700 1.2rem/1.2 var(--display); letter-spacing: -.01em; }
-.name .i { width: 18px; height: 18px; color: var(--accent); transition: transform .2s; margin-left: auto; flex: none; }
+.name { display: block; font: 700 1.2rem/1.2 var(--display); letter-spacing: -.01em; }
+.name .i { display: inline-block; vertical-align: -2px; margin-left: 6px; width: 18px; height: 18px; color: var(--accent); transition: transform .2s; }
 .toggle[aria-expanded="true"] .name .i { transform: rotate(180deg); }
 .taste { display: block; font-size: .95rem; margin-top: 3px; }
 .iwrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease; }
@@ -78,9 +71,9 @@ ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
 .iclip { display: block; overflow: hidden; min-height: 0; }
 .ings { display: block; color: var(--muted); font-size: .85rem; padding-top: 6px; transition: opacity .2s ease; }
 .drink.open .ings { opacity: 0; }
-.stats { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.stat { white-space: nowrap; }
 .stat b { color: var(--fg); font-weight: 600; }
-.stat + .stat::before { content: "\00b7"; margin-right: 8px; }
 .stat.mod { color: var(--accent); font-weight: 600; }
 
 .dwrap { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .3s ease, visibility 0s linear .3s; }
@@ -113,7 +106,7 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
 <div class="wrap">
   <div class="head">
     <button class="shuffle" data-act="surprise" data-key="surprise"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice"/></svg>Surprise me</button>
-    <span class="quip" id="lede" aria-live="polite"></span>
+    <div class="filter" id="filter" role="group" aria-label="Filter by spirit"></div>
   </div>
   <ul class="menu" id="menu"></ul>
 </div>
@@ -136,109 +129,109 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
 
   var DRINKS = [
     { id: "maple-walnut-old-fashioned", name: "Maple Walnut Old Fashioned", base: "Bourbon", glass: "rocks", color: "#c9791b", method: "stirred",
-      taste: "Tall, dark and stirred. Bourbon with maple and a nutty finish.",
+      taste: "Spirit-forward and lightly sweet, with a nutty finish.",
       ing: [I("Bourbon", 2, "oz", BO), I("Maple syrup", 0.25, "oz", 0, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
     { id: "pineapple-amaro-sour", name: "Pineapple Amaro Sour", base: "Rum", glass: "coupe", color: "#e0b53a", method: "shaken",
-      taste: "Sweet, sour and a little bitter, like most good stories.",
+      taste: "Sweet-tart and fruity, with a bitter edge.",
       ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Salt", 1, "pinch")] },
     { id: "allspice-margarita", name: "Allspice Margarita", base: "Tequila", glass: "rocks", color: "#e8a07a", method: "shaken",
-      taste: "A margarita that came dressed for fall.",
+      taste: "Tart and citrusy, lightly spiced.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Orange liqueur", 0.75, "oz", OL), I("Lime juice", 0.75), I("Allspice dram", 0.25, "oz", AD), I("Simple syrup", 0.25, "oz", 0, 1)] },
     { id: "montenegro-bourbon-sour", name: "Montenegro Bourbon Sour", base: "Bourbon", glass: "coupe", color: "#c8683b", method: "shaken",
-      taste: "Bourbon with a bittersweet streak, silky from the almond.",
+      taste: "Tart and bittersweet, with an almond note.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Lemon juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Angostura bitters", 1, "dash", BT), I("Vanilla extract", 1, "drop")] },
     { id: "maple-apple-mule", name: "Maple Apple Mule", base: "Bourbon", glass: "tall", color: "#d1a83a", method: "built",
-      taste: "Apple, maple and ginger. Easy to say yes to.",
+      taste: "Light and fizzy, with apple and ginger.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.5, "oz", AP), I("Lemon juice", 0.5), I("Maple syrup", 0.25, "oz", 0, 1), I("Ginger beer", 3, "top")] },
     { id: "pineapple-mai-tai", name: "Pineapple Mai Tai", base: "Rum", glass: "rocks", color: "#e9915b", method: "shaken",
-      taste: "Pineapple rum, lime and a little spice. Vacation energy.",
+      taste: "Fruity and tart, with almond and spice.",
       ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Orange liqueur", 0.5, "oz", OL), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
     { id: "montenegro-paper-plane", name: "Montenegro Paper Plane", base: "Bourbon", glass: "coupe", color: "#e27b3c", method: "shaken",
-      taste: "Equal parts, perfectly balanced. Unlike the rest of us.",
+      taste: "Equal parts. Bittersweet and citrusy.",
       ing: [I("Bourbon", 0.75, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Orange liqueur", 0.75, "oz", OL), I("Lemon juice", 0.75)] },
     { id: "tropical-tequila-buck", name: "Tropical Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built",
-      taste: "Tequila, lime and ginger. It kicks a little.",
+      taste: "Tart and fizzy, with ginger and almond.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Orgeat", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] },
     { id: "montenegro-tonic", name: "Montenegro Tonic", base: "Amaro", glass: "tall", color: "#d9703f", method: "built",
-      taste: "Light, bitter and easy. A good first date with amaro.",
+      taste: "Light, bitter and low in alcohol.",
       ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 3, "top"), I("Lemon", 1, "squeeze")] },
     { id: "spiced-pineapple-daiquiri", name: "Spiced Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken",
-      taste: "Pineapple rum and lime with a hint of spice. Sharp and a little flirty.",
+      taste: "Tart and fruity, lightly spiced.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
     { id: "maple-gold-rush", name: "Maple Gold Rush", base: "Bourbon", glass: "rocks", color: "#d98e2b", method: "shaken",
-      taste: "Bourbon, lemon and maple. A smooth talker.",
+      taste: "Sweet-tart and smooth.",
       ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Maple syrup", 0.5, "oz", 0, 1)] },
     { id: "maple-tommys-margarita", name: "Maple Tommy's Margarita", base: "Tequila", glass: "rocks", color: "#e6b05c", method: "shaken",
-      taste: "Tequila, lime and maple. No fuss, no triple sec.",
+      taste: "Tart and lightly sweet. No orange liqueur.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Maple syrup", 0.5, "oz", 0, 1)] },
     { id: "black-walnut-whiskey-sour", name: "Black Walnut Whiskey Sour", base: "Bourbon", glass: "coupe", color: "#b86a2e", method: "shaken",
-      taste: "A classic sour with a nutty twist.",
+      taste: "Tart, with a nutty finish.",
       ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1), I("Black walnut bitters", 2, "dash", BT)] },
     { id: "montenegro-old-fashioned", name: "Montenegro Old Fashioned", base: "Bourbon", glass: "rocks", color: "#b4532a", method: "stirred",
-      taste: "Boozy and bittersweet. Brooding, but in a good way.",
+      taste: "Spirit-forward and bittersweet.",
       ing: [I("Bourbon", 1.75, "oz", BO), I("Amaro Montenegro", 0.5, "oz", AM), I("Black walnut bitters", 2, "dash", BT)] },
     { id: "tequila-maple-old-fashioned", name: "Tequila Maple Old Fashioned", base: "Tequila", glass: "rocks", color: "#d4a04a", method: "stirred",
-      taste: "Agave in a bourbon's clothing.",
+      taste: "Spirit-forward and earthy, lightly sweet.",
       ing: [I("Tequila", 2, "oz", TQ), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "pineapple-old-fashioned", name: "Pineapple Old Fashioned", base: "Bourbon", glass: "rocks", color: "#d28b3f", method: "stirred",
-      taste: "Bourbon with a tropical secret.",
+      taste: "Spirit-forward, with a fruity note.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Stiggins pineapple rum", 0.75, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
     { id: "tropical-tequila-sour", name: "Tropical Tequila Sour", base: "Tequila", glass: "coupe", color: "#e07a5f", method: "shaken",
-      taste: "Tequila and pineapple rum, tart and a little tropical.",
+      taste: "Tart and fruity, with an almond note.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Stiggins pineapple rum", 0.5, "oz", RM), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Salt", 1, "pinch")] },
     { id: "apple-cinnamon-smash", name: "Apple Cinnamon Smash", base: "Bourbon", glass: "rocks", color: "#b8603a", method: "shaken",
-      taste: "Apple pie, but make it a cocktail. Cinnamon-sugar rim.",
+      taste: "Sweet-tart, served with a cinnamon-sugar rim.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.75, "oz", AP), I("Lemon juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1)] },
     { id: "apple-amaro-highball", name: "Apple Amaro Highball", base: "Amaro", glass: "tall", color: "#d6853a", method: "built",
-      taste: "Apple and amaro, tall and breezy.",
+      taste: "Light and bittersweet, with apple.",
       ing: [I("Jack Daniel's apple", 1, "oz", AP), I("Amaro Montenegro", 1, "oz", AM), I("Lemon juice", 0.5), I("Tonic water", 3, "top")] },
     { id: "tequila-tonic", name: "Tequila Tonic", base: "Tequila", glass: "tall", color: "#bcd3dc", method: "built",
-      taste: "Crisp, clean, no drama.",
+      taste: "Dry and crisp.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
     { id: "pineapple-dark-and-stormy", name: "Pineapple Dark & Stormy", base: "Rum", glass: "tall", color: "#cfa233", method: "built",
-      taste: "Pineapple rum, lime and ginger beer. Stormy in a good way.",
+      taste: "Fizzy and spicy, with pineapple.",
       ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Lime juice", 0.5), I("Angostura bitters", 2, "dash", BT), I("Ginger beer", 3, "top")] },
     { id: "pineapple-rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred",
-      taste: "Pineapple rum stirred with maple and bitters. Tropical and smooth.",
+      taste: "Spirit-forward and fruity, lightly sweet.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "allspice-old-fashioned", name: "Allspice Old Fashioned", base: "Bourbon", glass: "rocks", color: "#bf6a1e", method: "stirred",
-      taste: "Bourbon with a little allspice warmth. Cozy, no blanket needed.",
+      taste: "Spirit-forward and warmly spiced.",
       ing: [I("Bourbon", 2, "oz", BO), I("Allspice dram", 0.25, "oz", AD), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "montenegro-margarita", name: "Montenegro Margarita", base: "Tequila", glass: "rocks", color: "#e58a5a", method: "shaken",
-      taste: "Tequila and lime with a bitter orange streak.",
+      taste: "Tart, with a bitter orange note.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1)] },
     { id: "maple-apple-sour", name: "Maple Apple Sour", base: "Bourbon", glass: "coupe", color: "#c8863d", method: "shaken",
-      taste: "Bourbon, apple and lemon with a drizzle of maple. Fall in a glass.",
+      taste: "Sweet-tart, with apple and maple.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.5, "oz", AP), I("Lemon juice", 0.75), I("Maple syrup", 0.5, "oz", 0, 1)] },
     { id: "bourbon-orgeat-buck", name: "Bourbon Orgeat Buck", base: "Bourbon", glass: "tall", color: "#d4944a", method: "built",
-      taste: "Bourbon, lemon and almond with a ginger kick.",
+      taste: "Fizzy and tart, with an almond note.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Lemon juice", 0.5), I("Orgeat", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] },
     { id: "montenegro-mule", name: "Montenegro Mule", base: "Amaro", glass: "tall", color: "#d96f3a", method: "built",
-      taste: "Amaro Montenegro, lime and ginger beer. Bitter and bubbly.",
+      taste: "Bitter and fizzy, lower in alcohol.",
       ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.5), I("Angostura bitters", 1, "dash", BT), I("Ginger beer", 3, "top")] },
     { id: "pineapple-rum-tonic", name: "Pineapple Rum Tonic", base: "Rum", glass: "tall", color: "#f0d27a", method: "built",
-      taste: "Pineapple rum, lime and tonic. Light and bright.",
+      taste: "Light and dry.",
       ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
     { id: "lemon-ginger-fizz", name: "Lemon-Ginger Fizz", base: "No alcohol", glass: "tall", color: "#f2e394", method: "built",
-      taste: "All the sparkle, none of the booze.",
+      taste: "Tart and fizzy. No alcohol.",
       ing: [I("Lemon juice", 1), I("Simple syrup", 0.75, "oz", 0, 1), I("Ginger beer", 3, "top")] },
     { id: "orgeat-lime-fizz", name: "Orgeat Lime Fizz", base: "No alcohol", glass: "tall", color: "#ecd5b0", method: "built",
-      taste: "Almond, lime and bubbles. Dangerously drinkable, and zero alcohol.",
+      taste: "Fizzy, with lime and almond. No alcohol.",
       ing: [I("Lime juice", 1), I("Orgeat", 0.75, "oz", 0, 1), I("Ginger beer", 3, "top")] },
     { id: "maple-ginger-lemonade", name: "Maple Ginger Lemonade", base: "No alcohol", glass: "tall", color: "#f4d98a", method: "built",
-      taste: "Lemon, maple and ginger beer. No alcohol, all the cozy.",
+      taste: "Fizzy and lightly sweet. No alcohol.",
       ing: [I("Lemon juice", 1), I("Maple syrup", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] }
   ];
   var STORE = "november-back-bar-v6";
-  var LEDE = "";
-  var QUIPS = ["Trust me on this one.", "Ooh, good pick. I mean, I picked it.", "Bold. I like it.", "Don't overthink it.", "This one has your name on it."];
+  var BASES = ["All", "Bourbon", "Rum", "Tequila", "Amaro", "No alcohol"];
+  var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var HOW = { shaken: "Shake with ice, then strain.", stirred: "Stir with ice, then strain.", built: "Build over ice." };
   var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0 };
   var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
-  var state = { open: {}, mods: {} };
-  var focusKey = null, lastPick = null, quipTimer = null;
+  var state = { open: {}, mods: {}, base: "All" };
+  var focusKey = null, lastPick = null;
 
   function load() {
     try {
@@ -302,7 +295,7 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
     return '<span class="gl"><span class="gi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="--liq:' + d.color + '"><use href="#g-' + d.glass + '"/></svg>' + bubbles + '</span></span>';
   }
   function ingText(d) {
-    return d.ing.map(function (i, k) { return k === 0 ? i.n : i.n.charAt(0).toLowerCase() + i.n.slice(1); }).join(", ");
+    return d.ing.map(function (i, k) { return k === 0 || PROPER.test(i.n) ? i.n : i.n.charAt(0).toLowerCase() + i.n.slice(1); }).join(", ");
   }
   function segHTML(d, k, label, opts) {
     var cur = mods(d.id)[k];
@@ -325,11 +318,16 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
     modText(mods(d.id)).forEach(function (t) { s += '<span class="stat mod">' + esc(t) + '</span>'; });
     return '<span class="stats">' + s + '</span>';
   }
+  // Keeps the chevron on the same line as the last word of the name.
+  function nameHTML(n) {
+    var k = n.lastIndexOf(" ");
+    return esc(n.slice(0, k + 1)) + '<span style="white-space:nowrap">' + esc(n.slice(k + 1)) + icon("i-chev") + '</span>';
+  }
   function drinkHTML(d) {
     var open = !!state.open[d.id], c = calc(d);
     return '<li class="drink' + (open ? " open" : "") + '" data-drink="' + d.id + '" style="--c:' + d.color + '"><div class="row">' + glassHTML(d) +
       '<button class="toggle" data-act="toggle" data-id="' + d.id + '" data-key="toggle-' + d.id + '" aria-expanded="' + open + '" aria-controls="p-' + d.id + '">' +
-        '<span class="name">' + esc(d.name) + icon("i-chev") + '</span>' +
+        '<span class="name">' + nameHTML(d.name) + '</span>' +
         '<span class="taste">' + esc(d.taste) + '</span>' +
         '<span class="iwrap"><span class="iclip"><span class="ings">' + esc(ingText(d)) + '</span></span></span>' +
         statsHTML(d, c) +
@@ -337,7 +335,12 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
   }
 
   function shown() {
-    return DRINKS;
+    return state.base === "All" ? DRINKS : DRINKS.filter(function (d) { return d.base === state.base; });
+  }
+  function renderFilter() {
+    $("filter").innerHTML = BASES.map(function (b) {
+      return '<button data-act="base" data-v="' + b + '" data-key="base-' + b + '" aria-pressed="' + (state.base === b) + '">' + b + '</button>';
+    }).join("");
   }
   function renderMenu() {
     var html = "";
@@ -351,12 +354,6 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
     focusKey = null;
     if (el) el.focus();
   }
-  function say(text) {
-    $("lede").textContent = text;
-    clearTimeout(quipTimer);
-    if (text !== LEDE) quipTimer = setTimeout(function () { $("lede").textContent = LEDE; }, 4000);
-  }
-
   function surprise() {
     var list = shown(), pool = list.filter(function (d) { return d.id !== lastPick; });
     if (!pool.length) pool = list;
@@ -365,7 +362,6 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
     lastPick = d.id;
     state.open = {};
     renderMenu();
-    say(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
     var li = document.querySelector('[data-drink="' + d.id + '"]');
     if (!li) return;
     var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -396,11 +392,16 @@ dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 5
       m[t.getAttribute("data-k")] = v;
       save(); renderMenu();
     }
+    else if (act === "base") {
+      focusKey = t.getAttribute("data-key");
+      state.base = v; state.open = {};
+      renderFilter(); renderMenu();
+    }
     else if (act === "surprise") { surprise(); }
   });
 
   load();
-  say(LEDE);
+  renderFilter();
   renderMenu();
 })();
 </script>
