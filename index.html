@@ -118,7 +118,6 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     <g id="g-rocks"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M6.6 11h10.8l-.6 7.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8z"/><path d="M6 6h12l-1.2 12.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8L6 6z"/><path d="M6.6 11h10.8"/></g>
     <g id="g-coupe"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M4.9 6.6h14.2c-.5 3.4-3.5 5.4-7.1 5.4s-6.6-2-7.1-5.4z"/><path d="M4.5 5h15c0 4.2-3.4 7-7.5 7s-7.5-2.8-7.5-7z"/><path d="M12 12v7M8.5 19.5h7"/></g>
     <g id="g-tall"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M8.3 9h7.4l-.6 10.7a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8z"/><path d="M8 3.5h8l-.9 16.2a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8L8 3.5z"/><path d="M8.3 9h7.4"/></g>
-    <g id="g-mug"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M6.6 10h8.8v8.2a1.3 1.3 0 0 1-1.3 1.3H7.9a1.3 1.3 0 0 1-1.3-1.3z"/><path d="M6 6h10v12.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 6 18.5z"/><path d="M16 9h1.5a2 2 0 0 1 0 4H16"/></g>
     <g id="i-chev"><path d="M6 9l6 6 6-6"/></g>
     <g id="i-dice"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><circle cx="9" cy="9" r=".9" style="fill:currentColor;stroke:none"/><circle cx="15" cy="15" r=".9" style="fill:currentColor;stroke:none"/><circle cx="12" cy="12" r=".9" style="fill:currentColor;stroke:none"/></g>
   </defs>
@@ -127,7 +126,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 <script>
 (function () {
   // abv: share of alcohol. sw: a sweetener the guest can turn up or down.
-  var BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, WJ = 0.15, AD = 0.225, BT = 0.45;
+  var BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AD = 0.225, BT = 0.45;
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   var DRINKS = [
@@ -149,9 +148,6 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "kentucky-mule", name: "Kentucky Mule", base: "Whiskey", glass: "tall", color: "#d1a83a", method: "built", garnish: "a lime wedge",
       taste: "Fizzy and spicy.",
       ing: [I("Bourbon", 2, "oz", BO), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
-    { id: "warm-winter-jack", name: "Warm Winter Jack", base: "Whiskey", glass: "mug", color: "#c27a3a", method: "warm", garnish: "a cinnamon stick, if you have one",
-      taste: "Warm apple cider and spice. Low in alcohol.",
-      ing: [I("Jack Daniel's Winter Jack", 3, "oz", WJ)] },
     { id: "daiquiri", name: "Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken", garnish: "a lime wheel",
       taste: "Tart and fruity.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1)] },
@@ -167,6 +163,12 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "margarita", name: "Margarita", base: "Tequila", glass: "rocks", color: "#e6c25c", method: "shaken", garnish: "a lime wheel; salt the rim if you like",
       taste: "Tart and citrusy.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Orange liqueur", 0.75, "oz", OL)] },
+    { id: "tequila-matador", name: "Tequila Matador", base: "Tequila", glass: "coupe", color: "#f0cf5a", method: "shaken", garnish: "a lime wheel",
+      taste: "Fruity and tart, with pineapple.",
+      ing: [I("Tequila", 1, "oz", TQ), I("Pineapple juice", 2), I("Lime juice", 0.5)] },
+    { id: "matador-no-1", name: "Matador No. 1", base: "Tequila", glass: "tall", color: "#efc24a", method: "shaken", garnish: "a lime wedge",
+      taste: "A margarita lengthened with pineapple.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Orange liqueur", 0.625, "oz", OL), I("Lime juice", 0.5), I("Pineapple juice", 2)] },
     { id: "tequila-buck", name: "Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built", garnish: "a lime wedge",
       taste: "Fizzy, tart and spicy.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
@@ -190,14 +192,17 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 4, "top")] },
     { id: "monte-mule", name: "Monte Mule", base: "Amaro", glass: "tall", color: "#d96f3a", method: "built", garnish: "a lime wedge",
       taste: "Gentle and fizzy, bittersweet with ginger.",
-      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.75), I("Ginger beer", 4, "top")] }
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.75), I("Ginger beer", 4, "top")] },
+    { id: "montenegro-pineapple", name: "Montenegro & Pineapple", base: "Amaro", glass: "tall", color: "#f2c55a", method: "shaken", garnish: "a pineapple wedge, if you have one",
+      taste: "Fruity and bittersweet, low in alcohol.",
+      ing: [I("Amaro Montenegro", 1, "oz", AM), I("Pineapple juice", 4)] }
   ];
   var STORE = "november-back-bar-v6";
   var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila"];
   var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
   var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6 };
-  var DIL = { shaken: 1.25, stirred: 1.2, built: 1, warm: 1 };
+  var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
   var state = { open: {}, mods: {}, base: "All" };
@@ -217,7 +222,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function mods(id) { var m = state.mods[id] || {}; return { str: m.str === "light" ? "light" : "reg", sw: m.sw === "less" || m.sw === "more" ? m.sw : "reg" }; }
   function hasAlcohol(d) { return d.ing.some(function (i) { return i.abv > 0 && i.u !== "dash" && i.u !== "drop"; }); }
   function hasSweet(d) { return d.ing.some(function (i) { return i.sw; }); }
-  function isFizzy(d) { return d.method !== "warm" && d.ing.some(function (i) { return i.u === "top"; }); }
+  function isFizzy(d) { return d.ing.some(function (i) { return i.u === "top"; }); }
 
   function frac(n) {
     var w = Math.floor(n + 1e-9), e = Math.round((n - w) * 8);
@@ -231,7 +236,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function spoonHint(i) {
     if (i.u !== "oz") return "";
     var e = Math.max(1, Math.round(i.a * 8));
-    if (MARKS.indexOf(e) >= 0) return "";
+    if (MARKS.indexOf(e) >= 0 || e % 8 === 0) return "";
     var parts = [], left = e;
     while (left >= 4) {
       var m = MARKS.filter(function (x) { return x <= left; })[0];
@@ -304,8 +309,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (d.ing.some(function (i) { return i.u === "rim"; })) t.push("Rim the glass with " + d.ing.filter(function (i) { return i.u === "rim"; })[0].n.toLowerCase() + ".");
     if (d.method === "stirred") t.push((d.glass === "coupe" ? "Stir with ice, then strain into a chilled coupe." : "Stir with ice, then strain over a large ice cube.") + (mods(d.id).str === "light" ? " Half pour." : ""));
     else if (lengthened(d)) t.push("Shake with ice, strain into a tall glass over fresh ice, then top with soda water.");
-    else if (d.method === "shaken") t.push(d.glass === "coupe" ? "Shake with ice, then strain into a chilled coupe." : "Shake with ice, then strain over fresh ice.");
-    else if (d.method === "warm") t.push("Warm gently on the stove or in the microwave without boiling, then pour into a mug.");
+    else if (d.method === "shaken") t.push(d.glass === "coupe" ? "Shake with ice, then strain into a chilled coupe." : d.glass === "tall" ? "Shake with ice, then strain into a tall glass over fresh ice." : "Shake with ice, then strain over fresh ice.");
     else t.push(top ? "Build over ice, then top with " + top.n.toLowerCase() + " and stir gently." : "Build over ice.");
     if (d.garnish) t.push("Garnish with " + d.garnish + ".");
     return t.join(" ");
