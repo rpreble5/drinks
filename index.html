@@ -112,7 +112,11 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 .seg button { border: 0; border-bottom: 2px solid transparent; background: none; border-radius: 0; min-height: 38px; padding: 0; font-size: .92rem; color: var(--muted); }
 .seg button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
 .how { margin: 0; font-size: .85rem; color: var(--muted); }
-.tl { margin: -6px 0 0; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; letter-spacing: .12em; }
+.credit { margin: 32px 0 0; font-size: .75rem; color: var(--muted); }
+.credit a { color: inherit; }
+.tl { margin: -6px 0 0; display: flex; align-items: center; gap: 6px; font-size: 1.4rem; }
+.tl span { margin-right: 4px; }
+.emo { width: 24px; height: 24px; display: block; }
 .tl span { font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .tl { opacity: 0; transition: opacity .25s ease; }
 .drink.open .tl { opacity: 1; transition-delay: .3s; }
@@ -134,6 +138,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     <div class="ingpanel" id="ings" hidden></div>
   </div>
   <ul class="menu" id="menu"></ul>
+  <p class="credit">Emoji by <a href="https://github.com/jdecked/twemoji">Twemoji</a>, CC-BY 4.0</p>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -347,12 +352,25 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (d.tip) t.push(d.tip);
     return t.join(" ");
   }
+  // Twemoji images so the emojis look the same on every device. If an image fails to load,
+  // the plain emoji takes its place.
+  var TWEMOJI = "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/";
+  function emojiHTML(str) {
+    var chars = [];
+    Array.from(str).forEach(function (ch) {
+      if (ch === "\uFE0F" && chars.length) chars[chars.length - 1] += ch; else chars.push(ch);
+    });
+    return chars.map(function (e) {
+      var code = Array.from(e.indexOf("\u200D") < 0 ? e.replace(/\uFE0F/g, "") : e).map(function (c) { return c.codePointAt(0).toString(16); }).join("-");
+      return '<img class="emo" src="' + TWEMOJI + code + '.svg" alt="' + e + '" width="24" height="24" draggable="false" onerror="this.replaceWith(this.alt)">';
+    }).join("");
+  }
   function detailHTML(d, c) {
     var spec = '<dl class="spec">' + c.items.map(function (i, k) { return '<div style="--k:' + k + '"><dt>' + esc(i.n) + '</dt><dd>' + amountText(i) + spoonHint(i) + '</dd></div>'; }).join("") + '</dl>';
     var opts = "";
     if (hasAlcohol(d)) opts += segHTML(d, "str", "Strength", [["reg", "Regular"], ["light", "Light"]]);
     if (hasSweet(d)) opts += segHTML(d, "sw", "Sweetness", [["less", "Less"], ["reg", "Regular"], ["more", "More"]]);
-    var how = '<p class="how">' + howText(d) + '</p>' + (d.tl ? '<p class="tl"><span>Tastes like</span> ' + d.tl + '</p>' : "");
+    var how = '<p class="how">' + howText(d) + '</p>' + (d.tl ? '<p class="tl"><span>Tastes like</span> ' + emojiHTML(d.tl) + '</p>' : "");
     return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '">' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how + '</div></div></div>';
   }
   function statsHTML(d, c) {
