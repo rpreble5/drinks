@@ -131,9 +131,6 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 
   // Ordered most approachable first: fruity and easy weeknight drinks, then tart or bitter, then stirred and spirit-forward.
   var DRINKS = [
-    { id: "margarita", name: "Margarita", base: "Tequila", glass: "rocks", color: "#e6c25c", method: "shaken", garnish: "a lime wheel; salt the rim if you like",
-      taste: "Tart and citrusy.",
-      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Orange liqueur", 0.75, "oz", OL)] },
     { id: "tequila-matador", name: "Tequila Matador", base: "Tequila", glass: "coupe", color: "#f0cf5a", method: "shaken", garnish: "a lime wheel",
       taste: "Fruity and tart, with pineapple.",
       ing: [I("Tequila", 1, "oz", TQ), I("Pineapple juice", 2), I("Lime juice", 0.5)] },
@@ -155,6 +152,9 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "montenegro-pineapple", name: "Montenegro & Pineapple", base: "Amaro", glass: "tall", color: "#f2c55a", method: "shaken", garnish: "a pineapple wedge, if you have one",
       taste: "Fruity and bittersweet, low in alcohol.",
       ing: [I("Amaro Montenegro", 1, "oz", AM), I("Pineapple juice", 4)] },
+    { id: "margarita", name: "Margarita", base: "Tequila", glass: "rocks", color: "#e6c25c", method: "shaken", garnish: "a lime wheel; salt the rim if you like",
+      taste: "Tart and citrusy.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Orange liqueur", 0.75, "oz", OL)] },
     { id: "tequila-buck", name: "Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built", garnish: "a lime wedge",
       taste: "Fizzy, tart and spicy.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
