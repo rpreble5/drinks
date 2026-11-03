@@ -256,14 +256,20 @@ dl.spec .hint { display: block; font-size: .78rem; font-weight: 400; }
     if (!w && !e) return "⅛";
     return (w ? String(w) : "") + FR[e];
   }
-  // Jiggers usually only mark ½, ¾, 1, 1½ and 2 oz. For anything finer, give a spoon measure
-  // (1 oz = 6 tsp, so ⅛ oz = ¾ tsp), on top of the nearest jigger mark when there is one.
+  // The jigger marks ½, ¾, 1, 1½ and 2 oz. For anything else, measure the largest marks that fit,
+  // then make up the rest with a teaspoon (1 oz = 6 tsp, so ⅛ oz = ¾ tsp).
+  var MARKS = [16, 12, 8, 6, 4]; // in eighths of an ounce
   function spoonHint(i) {
     if (i.u !== "oz") return "";
     var e = Math.max(1, Math.round(i.a * 8));
-    if (e >= 4 && e % 2 === 0) return "";
-    var base = e >= 4 ? e - 1 : 0, tsp = frac((e - base) * 0.75);
-    return '<span class="hint">' + (base ? frac(base / 8) + " oz + " : "") + tsp + " tsp</span>";
+    if (MARKS.indexOf(e) >= 0) return "";
+    var parts = [], left = e;
+    while (left >= 4) {
+      var m = MARKS.filter(function (x) { return x <= left; })[0];
+      parts.push(frac(m / 8) + " oz"); left -= m;
+    }
+    if (left) parts.push(frac(left * 0.75) + " tsp");
+    return '<span class="hint">' + parts.join(" + ") + "</span>";
   }
   function amountText(i) {
     if (i.u === "oz") return frac(i.a) + " oz";
