@@ -172,18 +172,27 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "tequila-tonic", name: "Tequila Tonic", base: "Tequila", glass: "tall", color: "#bcd3dc", method: "built", garnish: "a lime wedge",
       taste: "Dry and crisp.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
-    { id: "monterita", name: "Monterita", base: "Amaro", glass: "coupe", color: "#e58a5a", method: "shaken", garnish: "a lime wheel",
+    { id: "monterita", name: "Monterita", base: "Tequila", glass: "coupe", color: "#e58a5a", method: "shaken", garnish: "a lime wheel",
       taste: "Bittersweet and citrusy, lower in alcohol.",
       ing: [I("Amaro Montenegro", 2, "oz", AM), I("Tequila", 1, "oz", TQ), I("Lime juice", 0.5)] },
-    { id: "montenegro-tonic", name: "Montenegro & Tonic", base: "Amaro", glass: "tall", color: "#d9703f", method: "built", garnish: "an orange slice",
+    { id: "monte-sour", name: "Monte Sour", base: "Amaro", glass: "rocks", color: "#d9703f", method: "shaken", garnish: "an orange twist",
+      taste: "Bittersweet and tart, lower in alcohol.",
+      ing: [I("Amaro Montenegro", 1.75, "oz", AM), I("Lemon juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1)] },
+    { id: "full-monte", name: "Full Monte No. 2", base: "Whiskey", glass: "rocks", color: "#a5482a", method: "stirred", garnish: "an orange twist",
+      taste: "Stirred and bittersweet, amaro-forward.",
+      ing: [I("Amaro Montenegro", 2, "oz", AM), I("Bourbon", 1, "oz", BO), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "monte-manhattan", name: "Monte Manhattan", base: "Whiskey", glass: "coupe", color: "#8f3d22", method: "stirred", garnish: "an orange twist",
+      taste: "Stirred and rich, sweeter than a Manhattan.",
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Bourbon", 1.5, "oz", BO)] },
+    { id: "monte-tonic", name: "Monte & Tonic", base: "Amaro", glass: "tall", color: "#e0884a", method: "built", garnish: "an orange slice",
       taste: "Light, bitter and low in alcohol.",
-      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 3, "top")] },
-    { id: "virgin-mule", name: "Virgin Mule", base: "No alcohol", glass: "tall", color: "#f2e394", method: "built", garnish: "a lime wedge",
-      taste: "Fizzy and spicy. No alcohol.",
-      ing: [I("Lime juice", 0.5), I("Ginger beer", 4, "top")] }
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 4, "top")] },
+    { id: "monte-mule", name: "Monte Mule", base: "Amaro", glass: "tall", color: "#d96f3a", method: "built", garnish: "a lime wedge",
+      taste: "Gentle and fizzy, bittersweet with ginger.",
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.75), I("Ginger beer", 4, "top")] }
   ];
   var STORE = "november-back-bar-v6";
-  var BASES = ["All", "Whiskey", "Rum", "Tequila", "Amaro", "No alcohol"];
+  var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila"];
   var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
   var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6 };
@@ -330,7 +339,9 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   }
 
   function shown() {
-    return state.base === "All" ? DRINKS : DRINKS.filter(function (d) { return d.base === state.base; });
+    if (state.base === "All") return DRINKS;
+    if (state.base === "Montenegro") return DRINKS.filter(function (d) { return d.ing.some(function (i) { return i.n === "Amaro Montenegro"; }); });
+    return DRINKS.filter(function (d) { return d.base === state.base; });
   }
   function renderFilter() {
     $("filter").innerHTML = BASES.map(function (b) {
