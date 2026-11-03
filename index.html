@@ -38,6 +38,21 @@ svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-widt
 .filter::-webkit-scrollbar { display: none; }
 .filter button { flex: none; white-space: nowrap; border: 0; border-bottom: 2px solid transparent; background: none; padding: 0; min-height: 36px; font-size: .92rem; color: var(--muted); }
 .filter button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
+.bar { margin-top: 6px; }
+.barbtn { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 0; min-height: 36px; font-size: .92rem; color: var(--muted); }
+.barbtn .i { width: 16px; height: 16px; color: var(--accent); transition: transform .2s; }
+.barbtn[aria-expanded="true"] .i { transform: rotate(180deg); }
+.barbtn .out { color: var(--accent); font-weight: 600; }
+.ingpanel { padding: 6px 0 4px; }
+.ingpanel .hint { margin: 0 0 8px; font-size: .82rem; color: var(--muted); }
+.ingpanel h3 { margin: 12px 0 2px; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.inglist { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: 0 16px; }
+.inglist button { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; min-height: 36px; text-align: left; font-size: .92rem; color: var(--fg); }
+.inglist button::before { content: ""; flex: none; width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--line); background: var(--surface); }
+.inglist button[aria-pressed="true"] { color: var(--muted); text-decoration: line-through; }
+.inglist button[aria-pressed="true"]::before { border-color: var(--accent); background: var(--accent); }
+.drink.na .row, .drink.na .detail { opacity: .45; }
+.stat.out { color: var(--accent); font-weight: 600; white-space: normal; }
 .shuffle { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--accent); color: var(--accent-ink); border-radius: 8px; min-height: 44px; padding: 0 18px 0 12px; font-weight: 600; }
 .shuffle .i { width: 22px; height: 22px; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
 .shuffle:hover .i, .shuffle:active .i { transform: rotate(200deg); }
@@ -109,6 +124,10 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   <div class="head">
     <button class="shuffle" data-act="surprise" data-key="surprise"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice"/></svg>Surprise me</button>
     <div class="filter" id="filter" role="group" aria-label="Filter by spirit"></div>
+  </div>
+  <div class="bar">
+    <button class="barbtn" data-act="bar" data-key="bar" aria-expanded="false" aria-controls="ings"><span id="barlabel">Ingredients</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    <div class="ingpanel" id="ings" hidden></div>
   </div>
   <ul class="menu" id="menu"></ul>
 </div>
@@ -212,16 +231,16 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
-  var state = { open: {}, mods: {}, base: "All" };
+  var state = { open: {}, mods: {}, base: "All", out: {}, bar: false };
   var focusKey = null, lastPick = null;
 
   function load() {
     try {
       var s = JSON.parse(localStorage.getItem(STORE) || "null");
-      if (s && typeof s === "object") state.mods = s.mods || {};
+      if (s && typeof s === "object") { state.mods = s.mods || {}; state.out = s.out || {}; }
     } catch (e) {}
   }
-  function save() { try { localStorage.setItem(STORE, JSON.stringify({ mods: state.mods })); } catch (e) {} }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify({ mods: state.mods, out: state.out })); } catch (e) {} }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
   }
@@ -336,6 +355,8 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     var s = '<span class="stat"><b>' + c.oz.toFixed(1) + '</b> oz drink</span>';
     s += hasAlcohol(d) ? '<span class="stat"><b>' + Math.round(c.abv) + '%</b> alcohol</span><span class="stat"><b>' + stdText(c.std) + '</b> standard drinks</span>' : '<span class="stat">No alcohol</span>';
     modText(mods(d.id)).forEach(function (t) { s += '<span class="stat mod">' + esc(t) + '</span>'; });
+    var miss = missing(d);
+    if (miss.length) s += '<span class="stat out">Out of ' + esc(miss.map(function (n) { return n.charAt(0).toLowerCase() + n.slice(1); }).join(", ")) + '</span>';
     return '<span class="stats">' + s + '</span>';
   }
   // Keeps the chevron on the same line as the last word of the name.
@@ -345,7 +366,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   }
   function drinkHTML(d) {
     var open = !!state.open[d.id], c = calc(d);
-    return '<li class="drink' + (open ? " open" : "") + '" data-drink="' + d.id + '" style="--c:' + d.color + '"><div class="row">' + glassHTML(d) +
+    return '<li class="drink' + (open ? " open" : "") + (missing(d).length ? " na" : "") + '" data-drink="' + d.id + '" style="--c:' + d.color + '"><div class="row">' + glassHTML(d) +
       '<button class="toggle" data-act="toggle" data-id="' + d.id + '" data-key="toggle-' + d.id + '" aria-expanded="' + open + '" aria-controls="p-' + d.id + '">' +
         '<span class="name">' + nameHTML(d.name) + '</span>' +
         '<span class="taste">' + esc(d.taste) + '</span>' +
@@ -354,6 +375,29 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       '</button></div>' + detailHTML(d, c) + '</li>';
   }
 
+  // Everything the menu calls for, grouped for the "out of" list.
+  function ingGroup(i) { return i.u === "dash" ? "Bitters" : i.u === "top" ? "Mixers" : i.abv > 0 ? "Spirits and liqueurs" : "Juices, syrups and more"; }
+  var GROUPS = ["Spirits and liqueurs", "Juices, syrups and more", "Mixers", "Bitters"];
+  var INGS = (function () {
+    var seen = {}, list = [];
+    DRINKS.forEach(function (d) { d.ing.forEach(function (i) { if (!seen[i.n]) { seen[i.n] = 1; list.push({ n: i.n, g: ingGroup(i) }); } }); });
+    return list.sort(function (a, b) { return a.n.localeCompare(b.n); });
+  })();
+  function missing(d) { return d.ing.filter(function (i) { return state.out[i.n]; }).map(function (i) { return i.n; }); }
+  function renderBar() {
+    var n = INGS.filter(function (i) { return state.out[i.n]; }).length;
+    $("barlabel").innerHTML = "Ingredients" + (n ? ' <span class="out">· out of ' + n + "</span>" : "");
+    var b = document.querySelector(".barbtn"), p = $("ings");
+    b.setAttribute("aria-expanded", String(state.bar));
+    p.hidden = !state.bar;
+    if (!state.bar) return;
+    p.innerHTML = '<p class="hint">Tap anything you\'re out of. Drinks that need it fade out.</p>' + GROUPS.map(function (g) {
+      var items = INGS.filter(function (i) { return i.g === g; });
+      return '<h3>' + g + '</h3><div class="inglist">' + items.map(function (i) {
+        return '<button data-act="out" data-v="' + esc(i.n) + '" data-key="out-' + esc(i.n) + '" aria-pressed="' + !!state.out[i.n] + '">' + esc(i.n) + '</button>';
+      }).join("") + '</div>';
+    }).join("");
+  }
   function shown() {
     if (state.base === "All") return DRINKS;
     if (state.base === "Montenegro") return DRINKS.filter(function (d) { return d.ing.some(function (i) { return i.n === "Amaro Montenegro"; }); });
@@ -377,7 +421,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (el) el.focus();
   }
   function surprise() {
-    var list = shown(), pool = list.filter(function (d) { return d.id !== lastPick; });
+    var list = shown().filter(function (d) { return !missing(d).length; }), pool = list.filter(function (d) { return d.id !== lastPick; });
     if (!pool.length) pool = list;
     if (!pool.length) return;
     var d = pool[Math.floor(Math.random() * pool.length)];
@@ -419,11 +463,20 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       state.base = v; state.open = {};
       renderFilter(); renderMenu();
     }
+    else if (act === "bar") {
+      state.bar = !state.bar; renderBar();
+    }
+    else if (act === "out") {
+      focusKey = t.getAttribute("data-key");
+      if (state.out[v]) delete state.out[v]; else state.out[v] = true;
+      save(); renderBar(); renderMenu();
+    }
     else if (act === "surprise") { surprise(); }
   });
 
   load();
   renderFilter();
+  renderBar();
   renderMenu();
 })();
 </script>
