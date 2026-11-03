@@ -130,75 +130,63 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   var DRINKS = [
-    { id: "maple-walnut-old-fashioned", name: "Maple Walnut Old Fashioned", base: "Bourbon", glass: "rocks", color: "#c9791b", method: "stirred", garnish: "an orange peel",
-      taste: "Spirit-forward and lightly sweet, with a nutty finish.",
-      ing: [I("Bourbon", 2, "oz", BO), I("Maple syrup", 0.25, "oz", 0, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
-    { id: "pineapple-amaro-sour", name: "Pineapple Amaro Sour", base: "Rum", glass: "coupe", color: "#e0b53a", method: "shaken", garnish: "a lime wheel",
-      taste: "Sweet-tart and fruity, with a bitter edge.",
-      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Orgeat", 0.25, "oz", 0, 1), I("Salt", 1, "pinch")] },
-    { id: "montenegro-bourbon-sour", name: "Montenegro Bourbon Sour", base: "Bourbon", glass: "coupe", color: "#c8683b", method: "shaken", garnish: "a lemon twist",
-      taste: "Tart and bittersweet, with an almond note.",
-      ing: [I("Bourbon", 1.5, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Lemon juice", 0.75), I("Orgeat", 0.25, "oz", 0, 1), I("Angostura bitters", 1, "dash", BT), I("Vanilla extract", 1, "drop")] },
-    { id: "maple-apple-mule", name: "Maple Apple Mule", base: "Bourbon", glass: "tall", color: "#d1a83a", method: "built", garnish: "a lemon wheel",
-      taste: "Light and fizzy, with apple and ginger.",
-      ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.5, "oz", AP), I("Lemon juice", 0.5), I("Maple syrup", 0.25, "oz", 0, 1), I("Ginger beer", 3, "top")] },
-    { id: "pineapple-mai-tai", name: "Pineapple Mai Tai", base: "Rum", glass: "rocks", color: "#e9915b", method: "shaken", garnish: "a lime wedge",
-      taste: "Fruity and tart, with almond and spice.",
-      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Orange liqueur", 0.5, "oz", OL), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
-    { id: "montenegro-paper-plane", name: "Montenegro Paper Plane", base: "Bourbon", glass: "coupe", color: "#e27b3c", method: "shaken", garnish: "a lemon twist",
-      taste: "Equal parts. Bittersweet and citrusy.",
-      ing: [I("Bourbon", 0.75, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Orange liqueur", 0.75, "oz", OL), I("Lemon juice", 0.75)] },
-    { id: "tropical-tequila-buck", name: "Tropical Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built", garnish: "a lime wedge",
-      taste: "Tart and fizzy, with ginger and almond.",
-      ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Orgeat", 0.25, "oz", 0, 1), I("Ginger beer", 3, "top")] },
-    { id: "montenegro-tonic", name: "Montenegro Tonic", base: "Amaro", glass: "tall", color: "#d9703f", method: "built", garnish: "an orange slice",
-      taste: "Light, bitter and low in alcohol.",
-      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 3, "top"), I("Lemon", 1, "squeeze")] },
-    { id: "spiced-pineapple-daiquiri", name: "Spiced Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken", garnish: "a lime wheel",
-      taste: "Tart and fruity, lightly spiced.",
-      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
-    { id: "maple-gold-rush", name: "Maple Gold Rush", base: "Bourbon", glass: "rocks", color: "#d98e2b", method: "shaken", garnish: "a lemon twist",
-      taste: "Sweet-tart and smooth.",
-      ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Maple syrup", 0.5, "oz", 0, 1)] },
-    { id: "maple-tommys-margarita", name: "Maple Tommy's Margarita", base: "Tequila", glass: "rocks", color: "#e6b05c", method: "shaken", garnish: "a lime wheel",
-      taste: "Tart and lightly sweet. No orange liqueur.",
-      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Maple syrup", 0.5, "oz", 0, 1)] },
-    { id: "montenegro-old-fashioned", name: "Montenegro Old Fashioned", base: "Bourbon", glass: "rocks", color: "#b4532a", method: "stirred", garnish: "an orange peel",
-      taste: "Spirit-forward and bittersweet.",
-      ing: [I("Bourbon", 1.75, "oz", BO), I("Amaro Montenegro", 0.5, "oz", AM), I("Black walnut bitters", 2, "dash", BT)] },
-    { id: "tequila-maple-old-fashioned", name: "Tequila Maple Old Fashioned", base: "Tequila", glass: "rocks", color: "#d4a04a", method: "stirred", garnish: "an orange peel",
-      taste: "Spirit-forward and earthy, lightly sweet.",
-      ing: [I("Tequila", 2, "oz", TQ), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
-    { id: "apple-cinnamon-sour", name: "Apple Cinnamon Sour", base: "Bourbon", glass: "rocks", color: "#b8603a", method: "shaken",
-      taste: "Sweet-tart, with a cinnamon-sugar rim.",
-      ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.75, "oz", AP), I("Lemon juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1), I("Cinnamon sugar", 1, "rim")] },
+    { id: "old-fashioned", name: "Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c9791b", method: "stirred", garnish: "an orange peel",
+      taste: "Spirit-forward, lightly sweet and bitter.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "maple-old-fashioned", name: "Maple Old Fashioned", base: "Whiskey", glass: "rocks", color: "#b8661c", method: "stirred", garnish: "an orange peel",
+      taste: "Spirit-forward, with maple and a nutty finish.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 1, "dash", BT), I("Black walnut bitters", 1, "dash", BT)] },
+    { id: "whiskey-sour", name: "Whiskey Sour", base: "Whiskey", glass: "rocks", color: "#e0a63a", method: "shaken", garnish: "a lemon twist",
+      taste: "Tart and balanced.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Simple syrup", 0.75, "oz", 0, 1)] },
+    { id: "lions-tail", name: "Lion's Tail", base: "Whiskey", glass: "coupe", color: "#c8683b", method: "shaken", garnish: "a lime wheel",
+      taste: "Tart and warmly spiced.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Allspice dram", 0.5, "oz", AD), I("Lime juice", 0.5), I("Simple syrup", 1, "tsp", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "monte-whiskey-sour", name: "Monte Whiskey Sour", base: "Whiskey", glass: "rocks", color: "#b4532a", method: "shaken", garnish: "an orange twist",
+      taste: "Bittersweet and tart, with an orange note.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Amaro Montenegro", 1, "oz", AM), I("Lemon juice", 0.5)] },
+    { id: "kentucky-mule", name: "Kentucky Mule", base: "Whiskey", glass: "tall", color: "#d1a83a", method: "built", garnish: "a lime wedge",
+      taste: "Fizzy and spicy.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
+    { id: "jack-apple-tonic", name: "Jack Apple & Tonic", base: "Whiskey", glass: "tall", color: "#d6a04a", method: "built", garnish: "an apple slice, if you have one",
+      taste: "Light and sweet, with apple.",
+      ing: [I("Jack Daniel's apple", 2, "oz", AP), I("Tonic water", 3, "top")] },
+    { id: "daiquiri", name: "Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken", garnish: "a lime wheel",
+      taste: "Tart and fruity.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1)] },
+    { id: "mai-tai", name: "Mai Tai", base: "Rum", glass: "rocks", color: "#e9915b", method: "shaken", garnish: "a lime wedge",
+      taste: "Fruity and tart, with almond and orange.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Orange liqueur", 0.5, "oz", OL), I("Orgeat", 0.5, "oz", 0, 1), I("Simple syrup", 0.25, "oz", 0, 1)] },
+    { id: "rum-buck", name: "Pineapple Rum Buck", base: "Rum", glass: "tall", color: "#cfa233", method: "built", garnish: "a lime wedge",
+      taste: "Fizzy and spicy, with pineapple.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
+    { id: "rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred", garnish: "an orange peel",
+      taste: "Spirit-forward, with a pineapple note.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "margarita", name: "Margarita", base: "Tequila", glass: "rocks", color: "#e6c25c", method: "shaken", garnish: "a lime wheel; salt the rim if you like",
+      taste: "Tart and citrusy.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Orange liqueur", 0.75, "oz", OL)] },
+    { id: "tequila-buck", name: "Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built", garnish: "a lime wedge",
+      taste: "Fizzy, tart and spicy.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
     { id: "tequila-tonic", name: "Tequila Tonic", base: "Tequila", glass: "tall", color: "#bcd3dc", method: "built", garnish: "a lime wedge",
       taste: "Dry and crisp.",
-      ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
-    { id: "pineapple-dark-and-stormy", name: "Pineapple Dark & Stormy", base: "Rum", glass: "tall", color: "#cfa233", method: "built", garnish: "a lime wedge",
-      taste: "Fizzy and spicy, with pineapple.",
-      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Lime juice", 0.5), I("Angostura bitters", 2, "dash", BT), I("Ginger beer", 3, "top")] },
-    { id: "pineapple-rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred", garnish: "an orange peel",
-      taste: "Spirit-forward and fruity, lightly sweet.",
-      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Maple syrup", 0.125, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
-    { id: "montenegro-margarita", name: "Montenegro Margarita", base: "Tequila", glass: "rocks", color: "#e58a5a", method: "shaken", garnish: "a lime wheel",
-      taste: "Tart, with a bitter orange note.",
-      ing: [I("Tequila", 1.5, "oz", TQ), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1)] },
-    { id: "montenegro-mule", name: "Montenegro Mule", base: "Amaro", glass: "tall", color: "#d96f3a", method: "built", garnish: "a lime wedge",
-      taste: "Bitter and fizzy, lower in alcohol.",
-      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.5), I("Angostura bitters", 1, "dash", BT), I("Ginger beer", 3, "top")] },
-    { id: "orgeat-lime-fizz", name: "Orgeat Lime Fizz", base: "No alcohol", glass: "tall", color: "#ecd5b0", method: "built", garnish: "a lime wedge",
-      taste: "Fizzy, with lime and almond. No alcohol.",
-      ing: [I("Lime juice", 1), I("Orgeat", 0.75, "oz", 0, 1), I("Ginger beer", 3, "top")] },
-    { id: "maple-ginger-lemonade", name: "Maple Ginger Lemonade", base: "No alcohol", glass: "tall", color: "#f4d98a", method: "built", garnish: "a lemon wheel",
-      taste: "Fizzy and lightly sweet. No alcohol.",
-      ing: [I("Lemon juice", 1), I("Maple syrup", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] }
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
+    { id: "monterita", name: "Monterita", base: "Amaro", glass: "coupe", color: "#e58a5a", method: "shaken", garnish: "a lime wheel",
+      taste: "Bittersweet and citrusy, lower in alcohol.",
+      ing: [I("Amaro Montenegro", 2, "oz", AM), I("Tequila", 1, "oz", TQ), I("Lime juice", 0.5)] },
+    { id: "montenegro-tonic", name: "Montenegro & Tonic", base: "Amaro", glass: "tall", color: "#d9703f", method: "built", garnish: "an orange slice",
+      taste: "Light, bitter and low in alcohol.",
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 3, "top")] },
+    { id: "virgin-mule", name: "Virgin Mule", base: "No alcohol", glass: "tall", color: "#f2e394", method: "built", garnish: "a lime wedge",
+      taste: "Fizzy and spicy. No alcohol.",
+      ing: [I("Lime juice", 0.5), I("Ginger beer", 4, "top")] }
   ];
   var STORE = "november-back-bar-v6";
-  var BASES = ["All", "Bourbon", "Rum", "Tequila", "Amaro", "No alcohol"];
+  var BASES = ["All", "Whiskey", "Rum", "Tequila", "Amaro", "No alcohol"];
   var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
-  var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0 };
+  var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6 };
   var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
@@ -249,6 +237,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (i.u === "drop") return i.a + (i.a === 1 ? " drop" : " drops");
     if (i.u === "pinch") return "pinch";
     if (i.u === "rim") return "for the rim";
+    if (i.u === "tsp") return frac(i.a) + " tsp";
     if (i.u === "squeeze") return "squeeze";
     return "";
   }
@@ -267,8 +256,8 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       var a = i.a;
       if (i.u === "oz") {
         if (m.str === "light" && (d.method === "stirred" || isBase(d, i))) a *= 0.5;
-        if (i.sw) a *= m.sw === "less" ? 0.5 : m.sw === "more" ? 1.5 : 1;
       }
+      if (i.sw) a *= m.sw === "less" ? 0.5 : m.sw === "more" ? 1.5 : 1;
       var v = (i.u === "oz" || i.u === "top") ? a : (UV[i.u] || 0) * a;
       if (i.u === "top") top += v; else vol += v;
       eth += v * i.abv;
@@ -302,7 +291,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   }
   function howText(d) {
     var t = [], top = d.ing.filter(function (i) { return i.u === "top"; })[0];
-    if (d.ing.some(function (i) { return i.u === "rim"; })) t.push("Rim the glass with cinnamon sugar.");
+    if (d.ing.some(function (i) { return i.u === "rim"; })) t.push("Rim the glass with " + d.ing.filter(function (i) { return i.u === "rim"; })[0].n.toLowerCase() + ".");
     if (d.method === "stirred") t.push(mods(d.id).str === "light" ? "Stir with ice, then strain over a large ice cube. Half pour." : "Stir with ice, then strain over a large ice cube.");
     else if (lengthened(d)) t.push("Shake with ice, strain into a tall glass over fresh ice, then top with soda water.");
     else if (d.method === "shaken") t.push(d.glass === "coupe" ? "Shake with ice, then strain into a chilled coupe." : "Shake with ice, then strain over fresh ice.");
