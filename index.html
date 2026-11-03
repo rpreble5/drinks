@@ -75,6 +75,7 @@ ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
 .stat { white-space: nowrap; }
 .stat b { color: var(--fg); font-weight: 600; }
 .stat.mod { color: var(--accent); font-weight: 600; }
+.stat.need { color: var(--accent); white-space: normal; }
 
 .dwrap { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .3s ease, visibility 0s linear .3s; }
 .drink.open .dwrap { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .3s ease, visibility 0s; }
@@ -118,6 +119,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     <g id="g-rocks"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M6.6 11h10.8l-.6 7.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8z"/><path d="M6 6h12l-1.2 12.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8L6 6z"/><path d="M6.6 11h10.8"/></g>
     <g id="g-coupe"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M4.9 6.6h14.2c-.5 3.4-3.5 5.4-7.1 5.4s-6.6-2-7.1-5.4z"/><path d="M4.5 5h15c0 4.2-3.4 7-7.5 7s-7.5-2.8-7.5-7z"/><path d="M12 12v7M8.5 19.5h7"/></g>
     <g id="g-tall"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M8.3 9h7.4l-.6 10.7a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8z"/><path d="M8 3.5h8l-.9 16.2a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8L8 3.5z"/><path d="M8.3 9h7.4"/></g>
+    <g id="g-mug"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M6.6 10h8.8v8.2a1.3 1.3 0 0 1-1.3 1.3H7.9a1.3 1.3 0 0 1-1.3-1.3z"/><path d="M6 6h10v12.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 6 18.5z"/><path d="M16 9h1.5a2 2 0 0 1 0 4H16"/></g>
     <g id="i-chev"><path d="M6 9l6 6 6-6"/></g>
     <g id="i-dice"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><circle cx="9" cy="9" r=".9" style="fill:currentColor;stroke:none"/><circle cx="15" cy="15" r=".9" style="fill:currentColor;stroke:none"/><circle cx="12" cy="12" r=".9" style="fill:currentColor;stroke:none"/></g>
   </defs>
@@ -126,7 +128,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 <script>
 (function () {
   // abv: share of alcohol. sw: a sweetener the guest can turn up or down.
-  var BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AP = 0.35, AD = 0.225, BT = 0.45;
+  var VM = 0.16, BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AP = 0.35, AD = 0.225, BT = 0.45;
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   var DRINKS = [
@@ -151,6 +153,21 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "jack-apple-tonic", name: "Jack Apple & Tonic", base: "Whiskey", glass: "tall", color: "#d6a04a", method: "built", garnish: "an apple slice, if you have one",
       taste: "Light and sweet, with apple.",
       ing: [I("Jack Daniel's apple", 2, "oz", AP), I("Tonic water", 3, "top")] },
+    { id: "jack-apple-fizz", name: "Jack Apple Fizz", base: "Whiskey", glass: "tall", color: "#e2b45a", method: "built", needs: "soda water", garnish: "an apple slice, if you have one",
+      taste: "Light and fizzy, with apple and lemon.",
+      ing: [I("Jack Daniel's apple", 2, "oz", AP), I("Lemon juice", 2, "tsp"), I("Soda water", 3, "top")] },
+    { id: "manhattan", name: "Manhattan", base: "Whiskey", glass: "coupe", color: "#9c3f22", method: "stirred", needs: "sweet vermouth", garnish: "an orange peel or a cherry",
+      taste: "Spirit-forward, rich and lightly sweet.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Sweet vermouth", 1, "oz", VM), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "gold-rush", name: "Gold Rush", base: "Whiskey", glass: "rocks", color: "#e0a72e", method: "shaken", needs: "honey", garnish: "a lemon twist",
+      taste: "Sweet-tart, with honey.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Honey syrup", 0.75, "oz", 0, 1)] },
+    { id: "stone-fence", name: "Stone Fence", base: "Whiskey", glass: "tall", color: "#d49a4a", method: "built", needs: "apple cider", garnish: "an apple slice, if you have one",
+      taste: "Long and apple-forward. Hard cider makes it drier.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Angostura bitters", 2, "dash", BT), I("Apple cider", 4, "top")] },
+    { id: "hot-toddy", name: "Hot Toddy", base: "Whiskey", glass: "mug", color: "#d9a35a", method: "hot", needs: "honey", garnish: "a lemon wheel",
+      taste: "Warm, honeyed and lemony.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Lemon juice", 0.5), I("Honey syrup", 0.75, "oz", 0, 1), I("Hot water", 4, "top")] },
     { id: "daiquiri", name: "Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken", garnish: "a lime wheel",
       taste: "Tart and fruity.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1)] },
@@ -163,9 +180,16 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred", garnish: "an orange peel",
       taste: "Spirit-forward, with a pineapple note.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "hot-buttered-rum", name: "Hot Buttered Rum", base: "Rum", glass: "mug", color: "#c98a4a", method: "hot", needs: "butter, brown sugar, cinnamon and nutmeg", garnish: "a cinnamon stick, if you have one",
+      note: "For the batter, beat 1 stick of soft butter with 1 cup of brown sugar, 1 tsp cinnamon and ½ tsp nutmeg. It keeps in the fridge.",
+      taste: "Warm, rich and spiced.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Butter batter", 2, "tbsp", 0, 1), I("Hot water", 6, "top")] },
     { id: "margarita", name: "Margarita", base: "Tequila", glass: "rocks", color: "#e6c25c", method: "shaken", garnish: "a lime wheel; salt the rim if you like",
       taste: "Tart and citrusy.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Orange liqueur", 0.75, "oz", OL)] },
+    { id: "tommys-margarita", name: "Tommy's Margarita", base: "Tequila", glass: "rocks", color: "#e8c46a", method: "shaken", needs: "agave syrup", garnish: "a lime wheel",
+      taste: "Tart and clean, with agave.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Agave syrup", 0.5, "oz", 0, 1)] },
     { id: "tequila-buck", name: "Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built", garnish: "a lime wedge",
       taste: "Fizzy, tart and spicy.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
@@ -195,8 +219,8 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila"];
   var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
-  var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6 };
-  var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
+  var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6, tbsp: 0.5 };
+  var DIL = { shaken: 1.25, stirred: 1.2, built: 1, hot: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
   var state = { open: {}, mods: {}, base: "All" };
@@ -216,7 +240,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function mods(id) { var m = state.mods[id] || {}; return { str: m.str === "light" ? "light" : "reg", sw: m.sw === "less" || m.sw === "more" ? m.sw : "reg" }; }
   function hasAlcohol(d) { return d.ing.some(function (i) { return i.abv > 0 && i.u !== "dash" && i.u !== "drop"; }); }
   function hasSweet(d) { return d.ing.some(function (i) { return i.sw; }); }
-  function isFizzy(d) { return d.ing.some(function (i) { return i.u === "top"; }); }
+  function isFizzy(d) { return d.method !== "hot" && d.ing.some(function (i) { return i.u === "top"; }); }
 
   function frac(n) {
     var w = Math.floor(n + 1e-9), e = Math.round((n - w) * 8);
@@ -247,6 +271,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (i.u === "pinch") return "pinch";
     if (i.u === "rim") return "for the rim";
     if (i.u === "tsp") return frac(i.a) + " tsp";
+    if (i.u === "tbsp") return frac(i.a) + " tbsp";
     if (i.u === "squeeze") return "squeeze";
     return "";
   }
@@ -301,11 +326,13 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function howText(d) {
     var t = [], top = d.ing.filter(function (i) { return i.u === "top"; })[0];
     if (d.ing.some(function (i) { return i.u === "rim"; })) t.push("Rim the glass with " + d.ing.filter(function (i) { return i.u === "rim"; })[0].n.toLowerCase() + ".");
-    if (d.method === "stirred") t.push(mods(d.id).str === "light" ? "Stir with ice, then strain over a large ice cube. Half pour." : "Stir with ice, then strain over a large ice cube.");
+    if (d.method === "stirred") t.push((d.glass === "coupe" ? "Stir with ice, then strain into a chilled coupe." : "Stir with ice, then strain over a large ice cube.") + (mods(d.id).str === "light" ? " Half pour." : ""));
     else if (lengthened(d)) t.push("Shake with ice, strain into a tall glass over fresh ice, then top with soda water.");
     else if (d.method === "shaken") t.push(d.glass === "coupe" ? "Shake with ice, then strain into a chilled coupe." : "Shake with ice, then strain over fresh ice.");
+    else if (d.method === "hot") t.push("Add to a warm mug, top with hot water and stir.");
     else t.push(top ? "Build over ice, then top with " + top.n.toLowerCase() + " and stir gently." : "Build over ice.");
     if (d.garnish) t.push("Garnish with " + d.garnish + ".");
+    if (d.note) t.push(d.note);
     return t.join(" ");
   }
   function detailHTML(d, c) {
@@ -319,6 +346,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   function statsHTML(d, c) {
     var s = '<span class="stat"><b>' + c.oz.toFixed(1) + '</b> oz drink</span>';
     s += hasAlcohol(d) ? '<span class="stat"><b>' + Math.round(c.abv) + '%</b> alcohol</span><span class="stat"><b>' + stdText(c.std) + '</b> standard drinks</span>' : '<span class="stat">No alcohol</span>';
+    if (d.needs) s += '<span class="stat need">Needs ' + esc(d.needs) + '</span>';
     modText(mods(d.id)).forEach(function (t) { s += '<span class="stat mod">' + esc(t) + '</span>'; });
     return '<span class="stats">' + s + '</span>';
   }
