@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>November Back Bar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+html { color-scheme: light; }
+body { margin: 0; }
+/* Layout: a bare fall menu. Just a shuffle button on top, then the drinks. Warm oat paper, espresso ink, pumpkin accent; each drink keeps its own tinted badge, pills and recipe panel. */
+:root {
+  --bg: #f8ecdc;
+  --surface: #fff8ee;
+  --fg: #2e1a10;
+  --muted: #7a5a45;
+  --line: #e6d0b4;
+  --accent: #b5471b;
+  --accent-ink: #ffffff;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1f130c; --surface: #2b1b11; --fg: #f7e8d3; --muted: #c2a487;
+    --line: #4a3322; --accent: #f0933a; --accent-ink: #2a1204; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1f130c; --surface: #2b1b11; --fg: #f7e8d3; --muted: #c2a487;
+  --line: #4a3322; --accent: #f0933a; --accent-ink: #2a1204; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.5 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 80px;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.wrap { max-width: 40rem; margin: 0 auto; }
+
+.head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.quip { color: var(--muted); font-size: .95rem; min-width: 0; }
+.shuffle { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--accent); color: var(--accent-ink); border-radius: 8px; min-height: 44px; padding: 0 18px 0 12px; font-weight: 600; }
+.shuffle .i { width: 22px; height: 22px; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.shuffle:hover .i, .shuffle:active .i { transform: rotate(200deg); }
+
+
+ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
+.drink { padding: 18px 0; border-bottom: 1px dashed var(--line); }
+.row { display: flex; gap: 14px; align-items: flex-start; }
+.gl { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; flex: none; background: var(--surface); background: color-mix(in srgb, var(--c) 24%, var(--bg)); }
+.gi { position: relative; display: inline-flex; width: 28px; height: 28px; transform-origin: 50% 85%; transition: transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+.gi svg.i { width: 28px; height: 28px; }
+.drink.open .gi { transform: rotate(-12deg); }
+.bub { position: absolute; bottom: 6px; width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0; pointer-events: none; }
+.bub:nth-child(2) { left: 12px; }
+.bub:nth-child(3) { left: 15px; }
+.bub:nth-child(4) { left: 13.5px; }
+.drink.open .bub { animation: rise 1.6s ease-in infinite; }
+.drink.open .bub:nth-child(3) { animation-delay: .5s; }
+.drink.open .bub:nth-child(4) { animation-delay: 1s; }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .9; } 100% { transform: translateY(-10px); opacity: 0; } }
+@keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-18deg); } 60% { transform: rotate(14deg); } }
+.drink.pop .gi { animation: wiggle .6s ease; }
+
+.toggle { flex: 1; min-width: 0; display: block; background: none; border: 0; padding: 0; text-align: left; color: inherit; }
+.name { display: flex; align-items: center; gap: 6px; font: 700 1.2rem/1.2 var(--display); letter-spacing: -.01em; }
+.name .i { width: 18px; height: 18px; color: var(--accent); transition: transform .2s; margin-left: auto; flex: none; }
+.toggle[aria-expanded="true"] .name .i { transform: rotate(180deg); }
+.taste { display: block; font-size: .95rem; margin-top: 3px; }
+.iwrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease; }
+.drink.open .iwrap { grid-template-rows: 0fr; }
+.iclip { display: block; overflow: hidden; min-height: 0; }
+.ings { display: block; color: var(--muted); font-size: .85rem; padding-top: 6px; transition: opacity .2s ease; }
+.drink.open .ings { opacity: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 2px 8px; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.stat b { color: var(--fg); font-weight: 600; }
+.stat + .stat::before { content: "\00b7"; margin-right: 8px; }
+.stat.mod { color: var(--accent); font-weight: 600; }
+
+.dwrap { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .3s ease, visibility 0s linear .3s; }
+.drink.open .dwrap { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .3s ease, visibility 0s; }
+.dclip { overflow: hidden; min-height: 0; }
+.detail { margin-top: 14px; padding: 16px; border-radius: 16px; display: grid; gap: 16px; background: var(--surface); background: color-mix(in srgb, var(--c) 14%, var(--surface)); }
+.spec div { opacity: 0; transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.drink.open .spec div { opacity: 1; transform: none; transition-delay: calc(var(--k, 0) * 45ms + 90ms); }
+.opts, .how { opacity: 0; transition: opacity .25s ease; }
+.drink.open .opts, .drink.open .how { opacity: 1; transition-delay: .25s; }
+dl.spec { margin: 0; display: grid; gap: 6px; font-size: .95rem; }
+dl.spec div { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dotted var(--muted); padding-bottom: 5px; }
+dl.spec dt { min-width: 0; }
+dl.spec dd { margin: 0; color: var(--muted); white-space: nowrap; font-weight: 500; }
+.opts { display: grid; gap: 10px; }
+.opt { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ol { font-size: .82rem; color: var(--muted); width: 5.5rem; }
+.seg { display: flex; gap: 18px; flex-wrap: wrap; }
+.seg button { border: 0; border-bottom: 2px solid transparent; background: none; border-radius: 0; min-height: 38px; padding: 0; font-size: .92rem; color: var(--muted); }
+.seg button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
+.how { margin: 0; font-size: .85rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .name .i, .dwrap, .drink.open .dwrap, .iwrap, .ings, .spec div, .opts, .how, .gi, .shuffle .i { transition: none !important; }
+  .drink.open .bub, .drink.pop .gi { animation: none; }
+  .drink.open .gi { transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <button class="shuffle" data-act="surprise" data-key="surprise"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice"/></svg>Surprise me</button>
+    <span class="quip" id="lede" aria-live="polite"></span>
+  </div>
+  <ul class="menu" id="menu"></ul>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="g-rocks"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M6.6 11h10.8l-.6 7.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8z"/><path d="M6 6h12l-1.2 12.2a1 1 0 0 1-1 .8H8.2a1 1 0 0 1-1-.8L6 6z"/><path d="M6.6 11h10.8"/></g>
+    <g id="g-coupe"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M4.9 6.6h14.2c-.5 3.4-3.5 5.4-7.1 5.4s-6.6-2-7.1-5.4z"/><path d="M4.5 5h15c0 4.2-3.4 7-7.5 7s-7.5-2.8-7.5-7z"/><path d="M12 12v7M8.5 19.5h7"/></g>
+    <g id="g-tall"><path style="fill:var(--liq,transparent);fill-opacity:.9;stroke:none" d="M8.3 9h7.4l-.6 10.7a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8z"/><path d="M8 3.5h8l-.9 16.2a1 1 0 0 1-1 .8H9.9a1 1 0 0 1-1-.8L8 3.5z"/><path d="M8.3 9h7.4"/></g>
+    <g id="i-chev"><path d="M6 9l6 6 6-6"/></g>
+    <g id="i-dice"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><circle cx="9" cy="9" r=".9" style="fill:currentColor;stroke:none"/><circle cx="15" cy="15" r=".9" style="fill:currentColor;stroke:none"/><circle cx="12" cy="12" r=".9" style="fill:currentColor;stroke:none"/></g>
+  </defs>
+</svg>
+
+<script>
+(function () {
+  // abv: share of alcohol. sw: a sweetener the guest can turn up or down.
+  var BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AP = 0.35, AD = 0.225, BT = 0.45;
+  function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
+
+  var DRINKS = [
+    { id: "maple-walnut-old-fashioned", name: "Maple Walnut Old Fashioned", base: "Bourbon", glass: "rocks", color: "#c9791b", method: "stirred",
+      taste: "Tall, dark and stirred. Bourbon with maple and a nutty finish.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Maple syrup", 0.25, "oz", 0, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "pineapple-amaro-sour", name: "Pineapple Amaro Sour", base: "Rum", glass: "coupe", color: "#e0b53a", method: "shaken",
+      taste: "Sweet, sour and a little bitter, like most good stories.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Salt", 1, "pinch")] },
+    { id: "allspice-margarita", name: "Allspice Margarita", base: "Tequila", glass: "rocks", color: "#e8a07a", method: "shaken",
+      taste: "A margarita that came dressed for fall.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Orange liqueur", 0.75, "oz", OL), I("Lime juice", 0.75), I("Allspice dram", 0.25, "oz", AD), I("Simple syrup", 0.25, "oz", 0, 1)] },
+    { id: "montenegro-bourbon-sour", name: "Montenegro Bourbon Sour", base: "Bourbon", glass: "coupe", color: "#c8683b", method: "shaken",
+      taste: "Bourbon with a bittersweet streak, silky from the almond.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Lemon juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Angostura bitters", 1, "dash", BT), I("Vanilla extract", 1, "drop")] },
+    { id: "maple-apple-mule", name: "Maple Apple Mule", base: "Bourbon", glass: "tall", color: "#d1a83a", method: "built",
+      taste: "Apple, maple and ginger. Easy to say yes to.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.5, "oz", AP), I("Lemon juice", 0.5), I("Maple syrup", 0.25, "oz", 0, 1), I("Ginger beer", 3, "top")] },
+    { id: "pineapple-mai-tai", name: "Pineapple Mai Tai", base: "Rum", glass: "rocks", color: "#e9915b", method: "shaken",
+      taste: "Pineapple rum, lime and a little spice. Vacation energy.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Orange liqueur", 0.5, "oz", OL), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
+    { id: "montenegro-paper-plane", name: "Montenegro Paper Plane", base: "Bourbon", glass: "coupe", color: "#e27b3c", method: "shaken",
+      taste: "Equal parts, perfectly balanced. Unlike the rest of us.",
+      ing: [I("Bourbon", 0.75, "oz", BO), I("Amaro Montenegro", 0.75, "oz", AM), I("Orange liqueur", 0.75, "oz", OL), I("Lemon juice", 0.75)] },
+    { id: "tropical-tequila-buck", name: "Tropical Tequila Buck", base: "Tequila", glass: "tall", color: "#d9708a", method: "built",
+      taste: "Tequila, lime and ginger. It kicks a little.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Orgeat", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] },
+    { id: "montenegro-tonic", name: "Montenegro Tonic", base: "Amaro", glass: "tall", color: "#d9703f", method: "built",
+      taste: "Light, bitter and easy. A good first date with amaro.",
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Tonic water", 3, "top"), I("Lemon", 1, "squeeze")] },
+    { id: "spiced-pineapple-daiquiri", name: "Spiced Pineapple Daiquiri", base: "Rum", glass: "coupe", color: "#f2c14e", method: "shaken",
+      taste: "Pineapple rum and lime with a hint of spice. Sharp and a little flirty.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1), I("Allspice dram", 0.25, "oz", AD)] },
+    { id: "maple-gold-rush", name: "Maple Gold Rush", base: "Bourbon", glass: "rocks", color: "#d98e2b", method: "shaken",
+      taste: "Bourbon, lemon and maple. A smooth talker.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Maple syrup", 0.5, "oz", 0, 1)] },
+    { id: "maple-tommys-margarita", name: "Maple Tommy's Margarita", base: "Tequila", glass: "rocks", color: "#e6b05c", method: "shaken",
+      taste: "Tequila, lime and maple. No fuss, no triple sec.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 1), I("Maple syrup", 0.5, "oz", 0, 1)] },
+    { id: "black-walnut-whiskey-sour", name: "Black Walnut Whiskey Sour", base: "Bourbon", glass: "coupe", color: "#b86a2e", method: "shaken",
+      taste: "A classic sour with a nutty twist.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Lemon juice", 0.75), I("Simple syrup", 0.5, "oz", 0, 1), I("Black walnut bitters", 2, "dash", BT)] },
+    { id: "montenegro-old-fashioned", name: "Montenegro Old Fashioned", base: "Bourbon", glass: "rocks", color: "#b4532a", method: "stirred",
+      taste: "Boozy and bittersweet. Brooding, but in a good way.",
+      ing: [I("Bourbon", 1.75, "oz", BO), I("Amaro Montenegro", 0.5, "oz", AM), I("Black walnut bitters", 2, "dash", BT)] },
+    { id: "tequila-maple-old-fashioned", name: "Tequila Maple Old Fashioned", base: "Tequila", glass: "rocks", color: "#d4a04a", method: "stirred",
+      taste: "Agave in a bourbon's clothing.",
+      ing: [I("Tequila", 2, "oz", TQ), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "pineapple-old-fashioned", name: "Pineapple Old Fashioned", base: "Bourbon", glass: "rocks", color: "#d28b3f", method: "stirred",
+      taste: "Bourbon with a tropical secret.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Stiggins pineapple rum", 0.75, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "tropical-tequila-sour", name: "Tropical Tequila Sour", base: "Tequila", glass: "coupe", color: "#e07a5f", method: "shaken",
+      taste: "Tequila and pineapple rum, tart and a little tropical.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Stiggins pineapple rum", 0.5, "oz", RM), I("Lime juice", 0.75), I("Orgeat", 0.5, "oz", 0, 1), I("Salt", 1, "pinch")] },
+    { id: "apple-cinnamon-smash", name: "Apple Cinnamon Smash", base: "Bourbon", glass: "rocks", color: "#b8603a", method: "shaken",
+      taste: "Apple pie, but make it a cocktail. Cinnamon-sugar rim.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.75, "oz", AP), I("Lemon juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1)] },
+    { id: "apple-amaro-highball", name: "Apple Amaro Highball", base: "Amaro", glass: "tall", color: "#d6853a", method: "built",
+      taste: "Apple and amaro, tall and breezy.",
+      ing: [I("Jack Daniel's apple", 1, "oz", AP), I("Amaro Montenegro", 1, "oz", AM), I("Lemon juice", 0.5), I("Tonic water", 3, "top")] },
+    { id: "tequila-tonic", name: "Tequila Tonic", base: "Tequila", glass: "tall", color: "#bcd3dc", method: "built",
+      taste: "Crisp, clean, no drama.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
+    { id: "pineapple-dark-and-stormy", name: "Pineapple Dark & Stormy", base: "Rum", glass: "tall", color: "#cfa233", method: "built",
+      taste: "Pineapple rum, lime and ginger beer. Stormy in a good way.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Lime juice", 0.5), I("Angostura bitters", 2, "dash", BT), I("Ginger beer", 3, "top")] },
+    { id: "pineapple-rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred",
+      taste: "Pineapple rum stirred with maple and bitters. Tropical and smooth.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Maple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "allspice-old-fashioned", name: "Allspice Old Fashioned", base: "Bourbon", glass: "rocks", color: "#bf6a1e", method: "stirred",
+      taste: "Bourbon with a little allspice warmth. Cozy, no blanket needed.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Allspice dram", 0.25, "oz", AD), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "montenegro-margarita", name: "Montenegro Margarita", base: "Tequila", glass: "rocks", color: "#e58a5a", method: "shaken",
+      taste: "Tequila and lime with a bitter orange streak.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Amaro Montenegro", 0.75, "oz", AM), I("Lime juice", 0.75), I("Simple syrup", 0.25, "oz", 0, 1)] },
+    { id: "maple-apple-sour", name: "Maple Apple Sour", base: "Bourbon", glass: "coupe", color: "#c8863d", method: "shaken",
+      taste: "Bourbon, apple and lemon with a drizzle of maple. Fall in a glass.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Jack Daniel's apple", 0.5, "oz", AP), I("Lemon juice", 0.75), I("Maple syrup", 0.5, "oz", 0, 1)] },
+    { id: "bourbon-orgeat-buck", name: "Bourbon Orgeat Buck", base: "Bourbon", glass: "tall", color: "#d4944a", method: "built",
+      taste: "Bourbon, lemon and almond with a ginger kick.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Lemon juice", 0.5), I("Orgeat", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] },
+    { id: "montenegro-mule", name: "Montenegro Mule", base: "Amaro", glass: "tall", color: "#d96f3a", method: "built",
+      taste: "Amaro Montenegro, lime and ginger beer. Bitter and bubbly.",
+      ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Lime juice", 0.5), I("Angostura bitters", 1, "dash", BT), I("Ginger beer", 3, "top")] },
+    { id: "pineapple-rum-tonic", name: "Pineapple Rum Tonic", base: "Rum", glass: "tall", color: "#f0d27a", method: "built",
+      taste: "Pineapple rum, lime and tonic. Light and bright.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Lime juice", 0.5), I("Tonic water", 3, "top")] },
+    { id: "lemon-ginger-fizz", name: "Lemon-Ginger Fizz", base: "No alcohol", glass: "tall", color: "#f2e394", method: "built",
+      taste: "All the sparkle, none of the booze.",
+      ing: [I("Lemon juice", 1), I("Simple syrup", 0.75, "oz", 0, 1), I("Ginger beer", 3, "top")] },
+    { id: "orgeat-lime-fizz", name: "Orgeat Lime Fizz", base: "No alcohol", glass: "tall", color: "#ecd5b0", method: "built",
+      taste: "Almond, lime and bubbles. Dangerously drinkable, and zero alcohol.",
+      ing: [I("Lime juice", 1), I("Orgeat", 0.75, "oz", 0, 1), I("Ginger beer", 3, "top")] },
+    { id: "maple-ginger-lemonade", name: "Maple Ginger Lemonade", base: "No alcohol", glass: "tall", color: "#f4d98a", method: "built",
+      taste: "Lemon, maple and ginger beer. No alcohol, all the cozy.",
+      ing: [I("Lemon juice", 1), I("Maple syrup", 0.5, "oz", 0, 1), I("Ginger beer", 3, "top")] }
+  ];
+  var STORE = "november-back-bar-v6";
+  var LEDE = "";
+  var QUIPS = ["Trust me on this one.", "Ooh, good pick. I mean, I picked it.", "Bold. I like it.", "Don't overthink it.", "This one has your name on it."];
+  var HOW = { shaken: "Shake with ice, then strain.", stirred: "Stir with ice, then strain.", built: "Build over ice." };
+  var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0 };
+  var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
+  var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
+
+  var state = { open: {}, mods: {} };
+  var focusKey = null, lastPick = null, quipTimer = null;
+
+  function load() {
+    try {
+      var s = JSON.parse(localStorage.getItem(STORE) || "null");
+      if (s && typeof s === "object") state.mods = s.mods || {};
+    } catch (e) {}
+  }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify({ mods: state.mods })); } catch (e) {} }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
+  function $(id) { return document.getElementById(id); }
+  function mods(id) { var m = state.mods[id] || {}; return { str: m.str === "light" ? "light" : "reg", sw: m.sw === "less" || m.sw === "more" ? m.sw : "reg" }; }
+  function hasAlcohol(d) { return d.ing.some(function (i) { return i.abv > 0 && i.u !== "dash" && i.u !== "drop"; }); }
+  function hasSweet(d) { return d.ing.some(function (i) { return i.sw; }); }
+  function isFizzy(d) { return d.ing.some(function (i) { return i.u === "top"; }); }
+
+  function frac(n) {
+    var w = Math.floor(n + 1e-9), e = Math.round((n - w) * 8);
+    if (e === 8) { w += 1; e = 0; }
+    if (!w && !e) return "⅛";
+    return (w ? String(w) : "") + FR[e];
+  }
+  function amountText(i) {
+    if (i.u === "oz") return frac(i.a) + " oz";
+    if (i.u === "top") return "to top";
+    if (i.u === "dash") return i.a + (i.a === 1 ? " dash" : " dashes");
+    if (i.u === "drop") return i.a + (i.a === 1 ? " drop" : " drops");
+    if (i.u === "pinch") return "pinch";
+    if (i.u === "squeeze") return "squeeze";
+    return "";
+  }
+  // Scales the recipe by the options chosen; estimates total volume (with ice melt) and alcohol.
+  function calc(d) {
+    var m = mods(d.id), vol = 0, top = 0, eth = 0, items = [];
+    d.ing.forEach(function (i) {
+      var a = i.a;
+      if (i.u === "oz") {
+        if (m.str === "light") a *= 0.5;
+        if (i.sw) a *= m.sw === "less" ? 0.5 : m.sw === "more" ? 1.5 : 1;
+      }
+      var v = (i.u === "oz" || i.u === "top") ? a : (UV[i.u] || 0) * a;
+      if (i.u === "top") top += v; else vol += v;
+      eth += v * i.abv;
+      items.push({ n: i.n, a: a, u: i.u });
+    });
+    var total = vol * DIL[d.method] + top;
+    return { items: items, oz: total, std: eth / 0.6, abv: total ? eth / total * 100 : 0 };
+  }
+  function stdText(x) { return x < 0.05 ? "0" : x.toFixed(1); }
+  function modText(m) {
+    var p = [];
+    if (m.str === "light") p.push("light");
+    if (m.sw === "less") p.push("less sweet"); else if (m.sw === "more") p.push("sweeter");
+    return p;
+  }
+
+  function icon(id) { return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#' + id + '"/></svg>'; }
+  function glassHTML(d) {
+    var bubbles = isFizzy(d) ? '<i class="bub"></i><i class="bub"></i><i class="bub"></i>' : "";
+    return '<span class="gl"><span class="gi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="--liq:' + d.color + '"><use href="#g-' + d.glass + '"/></svg>' + bubbles + '</span></span>';
+  }
+  function ingText(d) {
+    return d.ing.map(function (i, k) { return k === 0 ? i.n : i.n.charAt(0).toLowerCase() + i.n.slice(1); }).join(", ");
+  }
+  function segHTML(d, k, label, opts) {
+    var cur = mods(d.id)[k];
+    return '<div class="opt"><span class="ol">' + label + '</span><div class="seg" role="group" aria-label="' + label + ' for ' + esc(d.name) + '">' +
+      opts.map(function (o) {
+        return '<button data-act="mod" data-id="' + d.id + '" data-k="' + k + '" data-v="' + o[0] + '" data-key="mod-' + d.id + '-' + k + '-' + o[0] + '" aria-pressed="' + (cur === o[0]) + '">' + o[1] + '</button>';
+      }).join("") + '</div></div>';
+  }
+  function detailHTML(d, c) {
+    var spec = '<dl class="spec">' + c.items.map(function (i, k) { return '<div style="--k:' + k + '"><dt>' + esc(i.n) + '</dt><dd>' + amountText(i) + '</dd></div>'; }).join("") + '</dl>';
+    var opts = "";
+    if (hasAlcohol(d)) opts += segHTML(d, "str", "Strength", [["reg", "Regular"], ["light", "Light"]]);
+    if (hasSweet(d)) opts += segHTML(d, "sw", "Sweetness", [["less", "Less"], ["reg", "Regular"], ["more", "More"]]);
+    var how = '<p class="how">' + HOW[d.method] + '</p>';
+    return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '">' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how + '</div></div></div>';
+  }
+  function statsHTML(d, c) {
+    var s = '<span class="stat"><b>' + c.oz.toFixed(1) + '</b> oz drink</span>';
+    s += hasAlcohol(d) ? '<span class="stat"><b>' + Math.round(c.abv) + '%</b> alcohol</span><span class="stat"><b>' + stdText(c.std) + '</b> standard drinks</span>' : '<span class="stat">No alcohol</span>';
+    modText(mods(d.id)).forEach(function (t) { s += '<span class="stat mod">' + esc(t) + '</span>'; });
+    return '<span class="stats">' + s + '</span>';
+  }
+  function drinkHTML(d) {
+    var open = !!state.open[d.id], c = calc(d);
+    return '<li class="drink' + (open ? " open" : "") + '" data-drink="' + d.id + '" style="--c:' + d.color + '"><div class="row">' + glassHTML(d) +
+      '<button class="toggle" data-act="toggle" data-id="' + d.id + '" data-key="toggle-' + d.id + '" aria-expanded="' + open + '" aria-controls="p-' + d.id + '">' +
+        '<span class="name">' + esc(d.name) + icon("i-chev") + '</span>' +
+        '<span class="taste">' + esc(d.taste) + '</span>' +
+        '<span class="iwrap"><span class="iclip"><span class="ings">' + esc(ingText(d)) + '</span></span></span>' +
+        statsHTML(d, c) +
+      '</button></div>' + detailHTML(d, c) + '</li>';
+  }
+
+  function shown() {
+    return DRINKS;
+  }
+  function renderMenu() {
+    var html = "";
+    shown().forEach(function (d) { html += drinkHTML(d); });
+    $("menu").innerHTML = html;
+    restoreFocus();
+  }
+  function restoreFocus() {
+    if (!focusKey) return;
+    var el = document.querySelector('[data-key="' + focusKey + '"]');
+    focusKey = null;
+    if (el) el.focus();
+  }
+  function say(text) {
+    $("lede").textContent = text;
+    clearTimeout(quipTimer);
+    if (text !== LEDE) quipTimer = setTimeout(function () { $("lede").textContent = LEDE; }, 4000);
+  }
+
+  function surprise() {
+    var list = shown(), pool = list.filter(function (d) { return d.id !== lastPick; });
+    if (!pool.length) pool = list;
+    if (!pool.length) return;
+    var d = pool[Math.floor(Math.random() * pool.length)];
+    lastPick = d.id;
+    state.open = {};
+    renderMenu();
+    say(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
+    var li = document.querySelector('[data-drink="' + d.id + '"]');
+    if (!li) return;
+    var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    li.scrollIntoView({ block: "center", behavior: rm ? "auto" : "smooth" });
+    li.classList.add("pop");
+    setTimeout(function () {
+      state.open[d.id] = true;
+      li.classList.add("open");
+      var b = li.querySelector(".toggle");
+      b.setAttribute("aria-expanded", "true");
+      b.focus({ preventScroll: true });
+    }, rm ? 0 : 450);
+    setTimeout(function () { li.classList.remove("pop"); }, 1100);
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-act]");
+    if (!t) return;
+    var act = t.getAttribute("data-act"), id = t.getAttribute("data-id"), v = t.getAttribute("data-v");
+    if (act === "toggle") {
+      state.open[id] = !state.open[id];
+      t.setAttribute("aria-expanded", String(state.open[id]));
+      t.closest(".drink").classList.toggle("open", state.open[id]);
+    }
+    else if (act === "mod") {
+      focusKey = t.getAttribute("data-key");
+      var m = state.mods[id] || (state.mods[id] = {});
+      m[t.getAttribute("data-k")] = v;
+      save(); renderMenu();
+    }
+    else if (act === "surprise") { surprise(); }
+  });
+
+  load();
+  say(LEDE);
+  renderMenu();
+})();
+</script>
+</body>
+</html>
