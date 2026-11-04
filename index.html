@@ -126,8 +126,6 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 .whens button { border: 0; background: none; padding: 3px 0; min-height: 40px; font: italic 400 1.45rem/1.2 "Instrument Serif", Georgia, serif; color: var(--fg); text-align: left; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1px; transition: color .15s, text-decoration-color .15s; }
 .whens button:hover, .whens button:focus-visible { color: var(--accent); text-decoration-color: currentColor; outline: none; }
 .dlg .go { min-height: 44px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); padding: 6px 10px; font-weight: 600; }
-.dlg label { display: block; margin-bottom: 6px; font-size: .85rem; color: var(--muted); }
-.dlg input { width: 100%; min-height: 44px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); padding: 0 12px; font: inherit; }
 .dlg .go { width: 100%; margin-top: 12px; border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
 .ohead { display: flex; justify-content: space-between; margin-bottom: 8px; }
 .back { border: 0; background: none; padding: 0; min-height: 40px; font-size: .92rem; color: var(--accent); font-weight: 600; }
@@ -442,7 +440,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     var el = $("orderdlg");
     el.innerHTML = '<button class="x" data-act="closedlg" aria-label="Close">×</button>' + html;
     if (!el.open) el.showModal();
-    var f = el.querySelector("input, .whens button, .go"); if (f) f.focus();
+    var f = el.querySelector(".whens button, .go"); if (f) f.focus();
   }
   function startOrder(id) {
     var d = byId(id);
@@ -450,16 +448,10 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     dlg('<h2 id="dlgtitle">When do you want your ' + esc(d.name) + '?</h2><p>Pick one. Take your time.</p><div class="whens">' +
       WHENS.map(function (w) { return '<button data-act="when" data-v="' + esc(w) + '">' + esc(w) + '</button>'; }).join("") + '</div>');
   }
-  function askName(when) {
-    pending.when = when;
-    dlg('<h2 id="dlgtitle">' + esc(when) + '. Got it.</h2><p>Who\'s it for?</p>' +
-      '<label for="oname">Your name (optional)</label><input id="oname" maxlength="40" autocomplete="given-name">' +
-      '<button class="go" data-act="place">Place order</button>');
-  }
-  function placeOrder() {
+  function placeOrder(when) {
     var d = byId(pending.id), m = modText(mods(d.id));
-    var name = ($("oname").value || "").replace(/·/g, "").trim().slice(0, 40);
-    pending.msg = d.name + (m.length ? " (" + m.join(", ") + ")" : "") + " · " + pending.when + (name ? " · for " + name : "");
+    pending.when = when;
+    pending.msg = d.name + (m.length ? " (" + m.join(", ") + ")" : "") + " · " + when;
     sendOrder();
   }
   function sendOrder() {
@@ -636,8 +628,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     }
     else if (act === "surprise") { surprise(); }
     else if (act === "order") { startOrder(id); }
-    else if (act === "when") { askName(v); }
-    else if (act === "place") { placeOrder(); }
+    else if (act === "when") { placeOrder(v); }
     else if (act === "place-retry") { sendOrder(); }
     else if (act === "closedlg") { $("orderdlg").close(); }
     else if (act === "view") { showView(v); window.scrollTo(0, 0); }
@@ -653,9 +644,8 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   renderFilter();
   renderBar();
   renderMenu();
-  // Clicking the dim backdrop closes the order dialog; Enter in the name field places the order.
+  // Clicking the dim backdrop closes the order dialog.
   $("orderdlg").addEventListener("click", function (e) { if (e.target === this) this.close(); });
-  $("orderdlg").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.id === "oname") { e.preventDefault(); placeOrder(); } });
   window.addEventListener("hashchange", function () { showView(location.hash === "#orders" ? "orders" : "menu"); });
   if (location.hash === "#orders") showView("orders");
 })();
