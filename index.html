@@ -212,7 +212,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "paloma", name: "Paloma", base: "Tequila", glass: "tall", color: "#f4a6a0", method: "built", garnish: "a lime wedge", tl: "🌵💗🫧🧂",
       taste: "Fizzy, tart and refreshing, with grapefruit.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.5), I("Salt", 1, "pinch"), I("Pink grapefruit soda", 4, "top")] },
-    { id: "bramble", name: "Bramble", base: "Gin", glass: "rocks", color: "#8e3b5f", method: "shaken", garnish: "a lemon wheel", finish: "Shake everything except the crème de mûre, then pour it over the top last so it bleeds down through the drink.", tl: "🫐🍋🌿",
+    { id: "bramble", name: "Bramble", base: "Gin", glass: "rocks", color: "#8e3b5f", method: "shaken", garnish: "a lemon wheel", steps: "Shake the gin, lemon and syrup with ice, then strain over fresh ice. Pour the crème de mûre over the top last so it bleeds down through the drink.", tl: "🫐🍋🌿",
       taste: "Tart and berry-sweet, with lemon.",
       ing: [I("Las Californias Cítrico gin", 2, "oz", GN), I("Lemon juice", 1), I("Simple syrup", 0.5, "oz", 0, 1), I("Crème de mûre", 0.5, "oz", MR)] },
     { id: "mai-tai", name: "Mai Tai", base: "Rum", glass: "rocks", color: "#e9915b", method: "shaken", garnish: "a lime wedge", tl: "🍍🌴🌰🍊",
@@ -439,13 +439,13 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (d.ing.some(function (i) { return i.u === "rim"; })) t.push("Rim the glass with " + d.ing.filter(function (i) { return i.u === "rim"; })[0].n.toLowerCase() + ".");
     // Instructions say whether a drink is served with or without ice, never which glass to use.
     var up = d.glass === "coupe" ? "Serve without ice." : "";
-    if (d.method === "stirred") t.push((up ? "Stir with ice, then strain. " + up : "Stir with ice, then strain over fresh ice.") + (mods(d.id).str === "light" ? " Half pour." : ""));
+    if (d.steps) t.push(d.steps);
+    else if (d.method === "stirred") t.push((up ? "Stir with ice, then strain. " + up : "Stir with ice, then strain over fresh ice.") + (mods(d.id).str === "light" ? " Half pour." : ""));
     else if (lengthened(d)) t.push("Shake with ice, strain over fresh ice, then top with soda water.");
     else if (d.method === "shaken" && top) t.push("Shake with ice, strain over fresh ice, then top with " + top.n.toLowerCase() + ".");
     else if (d.method === "shaken") t.push(up ? "Shake with ice, then strain. " + up : "Shake with ice, then strain over fresh ice.");
     else if (d.method === "hot") t.push("Add to a warm mug, top with hot water and stir.");
     else t.push(top ? "Build over ice, then top with " + top.n.toLowerCase() + " and stir gently." : "Build over ice.");
-    if (d.finish) t.push(d.finish);
     if (d.garnish) t.push("Garnish with " + d.garnish + ".");
     if (d.tip) t.push(d.tip);
     if (d.foam) t.push("For a silky foam, add 3 dashes of foamer and shake extra hard.");
