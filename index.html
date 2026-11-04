@@ -112,6 +112,35 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 .seg button { border: 0; border-bottom: 2px solid transparent; background: none; border-radius: 0; min-height: 38px; padding: 0; font-size: .92rem; color: var(--muted); }
 .seg button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
 .how { margin: 0; font-size: .85rem; color: var(--muted); }
+.wrap { position: relative; }
+.orderslink { position: absolute; top: 0; right: 0; border: 0; background: none; padding: 4px 0; font-size: .75rem; color: var(--muted); opacity: .55; }
+.orderslink:hover { opacity: 1; }
+.orderbtn { justify-self: start; border: 1.5px solid var(--accent); background: none; color: var(--accent); border-radius: 8px; min-height: 40px; padding: 0 16px; font-weight: 600; opacity: 0; transition: opacity .25s ease; }
+.drink.open .orderbtn { opacity: 1; transition-delay: .3s; }
+.dlg { width: min(24rem, calc(100vw - 32px)); border: 0; border-radius: 16px; padding: 20px; background: var(--surface); color: var(--fg); box-shadow: 0 12px 40px rgba(46, 26, 16, .25); }
+.dlg::backdrop { background: rgba(46, 26, 16, .35); }
+.dlg h2 { margin: 0 32px 4px 0; font: 700 1.25rem/1.25 var(--display); }
+.dlg p { margin: 0 0 14px; color: var(--muted); font-size: .92rem; }
+.dlg .x { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; background: none; font-size: 1.4rem; line-height: 1; color: var(--muted); }
+.whens { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.whens button, .dlg .go { min-height: 44px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); padding: 6px 10px; font-weight: 600; }
+.whens button:hover { border-color: var(--accent); }
+.dlg label { display: block; margin-bottom: 6px; font-size: .85rem; color: var(--muted); }
+.dlg input { width: 100%; min-height: 44px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); padding: 0 12px; font: inherit; }
+.dlg .go { width: 100%; margin-top: 12px; border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.ohead { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.back { border: 0; background: none; padding: 0; min-height: 40px; font-size: .92rem; color: var(--accent); font-weight: 600; }
+.olist { list-style: none; margin: 0; padding: 0; }
+.olist li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-bottom: 1px dashed var(--line); }
+.olist .od { flex: 1; min-width: 0; }
+.olist b { font: 700 1.1rem/1.25 var(--display); }
+.olist .meta { display: block; font-size: .85rem; color: var(--muted); }
+.olist .when { color: var(--accent); font-weight: 600; }
+.olist li.done { opacity: .45; }
+.olist li.done b { text-decoration: line-through; }
+.olist .empty { display: block; color: var(--muted); }
+.olist .tick { flex: none; min-height: 36px; border: 1.5px solid var(--line); border-radius: 8px; background: none; padding: 0 12px; font-size: .85rem; color: var(--muted); }
+.onote { margin: 16px 0 0; font-size: .78rem; color: var(--muted); }
 .credit { margin: 32px 0 0; font-size: .75rem; color: var(--muted); }
 .credit a { color: inherit; }
 .tl { margin: -6px 0 0; display: flex; align-items: center; gap: 6px; font-size: 1.4rem; }
@@ -121,7 +150,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 .tl { opacity: 0; transition: opacity .25s ease; }
 .drink.open .tl { opacity: 1; transition-delay: .3s; }
 @media (prefers-reduced-motion: reduce) {
-  .name .i, .dwrap, .drink.open .dwrap, .iwrap, .ings, .spec div, .opts, .how, .tl, .gi, .shuffle .i { transition: none !important; }
+  .name .i, .dwrap, .drink.open .dwrap, .iwrap, .ings, .spec div, .opts, .how, .tl, .orderbtn, .gi, .shuffle .i { transition: none !important; }
   .drink.open .bub, .drink.pop .gi { animation: none; }
   .drink.open .gi { transform: none; }
 }
@@ -129,6 +158,8 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 </head>
 <body>
 <div class="wrap">
+  <button class="orderslink" data-act="view" data-v="orders">Orders</button>
+  <div id="menuview">
   <div class="head">
     <button class="shuffle" data-act="surprise" data-key="surprise"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-dice"/></svg>Surprise me</button>
     <div class="filter" id="filter" role="group" aria-label="Filter by spirit"></div>
@@ -138,6 +169,16 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     <div class="ingpanel" id="ings" hidden></div>
   </div>
   <ul class="menu" id="menu"></ul>
+  </div>
+  <section id="ordersview" hidden>
+    <div class="ohead">
+      <button class="back" data-act="view" data-v="menu">← Menu</button>
+      <button class="back" data-act="refresh" data-key="refresh">Refresh</button>
+    </div>
+    <ul class="olist" id="olist" aria-live="polite"></ul>
+    <p class="onote">Orders clear themselves after about 12 hours. Marking one done only hides it on this device.</p>
+  </section>
+  <dialog class="dlg" id="orderdlg" aria-labelledby="dlgtitle"></dialog>
   <p class="credit">Emoji by <a href="https://github.com/jdecked/twemoji">Twemoji</a>, CC-BY 4.0</p>
 </div>
 
@@ -264,16 +305,16 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   var DIL = { shaken: 1.25, stirred: 1.2, built: 1 };
   var FR = ["", "⅛", "¼", "⅜", "½", "⅝", "¾", "⅞"];
 
-  var state = { open: {}, mods: {}, base: "All", out: {}, bar: false };
+  var state = { open: {}, mods: {}, base: "All", out: {}, bar: false, done: {} };
   var focusKey = null, lastPick = null;
 
   function load() {
     try {
       var s = JSON.parse(localStorage.getItem(STORE) || "null");
-      if (s && typeof s === "object") { state.mods = s.mods || {}; state.out = s.out || {}; }
+      if (s && typeof s === "object") { state.mods = s.mods || {}; state.out = s.out || {}; state.done = s.done || {}; }
     } catch (e) {}
   }
-  function save() { try { localStorage.setItem(STORE, JSON.stringify({ mods: state.mods, out: state.out })); } catch (e) {} }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify({ mods: state.mods, out: state.out, done: state.done })); } catch (e) {} }
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
   }
@@ -389,13 +430,88 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       return '<img class="emo" src="' + TWEMOJI + code + '.svg" alt="' + e + '" width="24" height="24" draggable="false" onerror="this.replaceWith(this.alt)">';
     }).join("");
   }
+  // Orders go through ntfy.sh, a free notification service with no account, so every phone
+  // sees the same list. Anyone who knows the topic name can read it; orders expire after ~12h.
+  var NTFY = "https://ntfy.sh/drinks-menu-7ac0b63632e2ded7";
+  // The joke: every option means "right now".
+  var WHENS = ["Now", "ASAP", "Immediately", "Yesterday", "Right this second", "Before I finish this sentence"];
+  var pending = null, pollTimer = null;
+  function byId(id) { return DRINKS.filter(function (d) { return d.id === id; })[0]; }
+  function dlg(html) {
+    var el = $("orderdlg");
+    el.innerHTML = '<button class="x" data-act="closedlg" aria-label="Close">×</button>' + html;
+    if (!el.open) el.showModal();
+    var f = el.querySelector("input, .whens button, .go"); if (f) f.focus();
+  }
+  function startOrder(id) {
+    var d = byId(id);
+    pending = { id: id, when: "" };
+    dlg('<h2 id="dlgtitle">When do you want your ' + esc(d.name) + '?</h2><p>Pick one. Take your time.</p><div class="whens">' +
+      WHENS.map(function (w) { return '<button data-act="when" data-v="' + esc(w) + '">' + esc(w) + '</button>'; }).join("") + '</div>');
+  }
+  function askName(when) {
+    pending.when = when;
+    dlg('<h2 id="dlgtitle">' + esc(when) + '. Got it.</h2><p>Who\'s it for?</p>' +
+      '<label for="oname">Your name (optional)</label><input id="oname" maxlength="40" autocomplete="given-name">' +
+      '<button class="go" data-act="place">Place order</button>');
+  }
+  function placeOrder() {
+    var d = byId(pending.id), m = modText(mods(d.id));
+    var name = ($("oname").value || "").replace(/·/g, "").trim().slice(0, 40);
+    pending.msg = d.name + (m.length ? " (" + m.join(", ") + ")" : "") + " · " + pending.when + (name ? " · for " + name : "");
+    sendOrder();
+  }
+  function sendOrder() {
+    dlg('<h2 id="dlgtitle">Sending…</h2>');
+    fetch(NTFY + "?title=" + encodeURIComponent("Drink order") + "&tags=cocktail", { method: "POST", body: pending.msg })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); })
+      .then(function () {
+        dlg('<h2 id="dlgtitle">Order placed!</h2><p>The bartender has been told it\'s extremely urgent. They\'ll get to it ' + esc(pending.when.toLowerCase()) + '-ish.</p><button class="go" data-act="closedlg">Cheers</button>');
+      })
+      .catch(function () {
+        dlg('<h2 id="dlgtitle">The order slip blew away</h2><p>Couldn\'t send it. Try again, or just ask the bartender nicely.</p><button class="go" data-act="place-retry">Try again</button>');
+      });
+  }
+  function ago(t) {
+    var m = Math.round((Date.now() / 1000 - t) / 60);
+    return m < 1 ? "just now" : m < 60 ? m + " min ago" : Math.round(m / 60) + " hr ago";
+  }
+  function loadOrders() {
+    var list = $("olist");
+    fetch(NTFY + "/json?poll=1&since=all")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (txt) {
+        var orders = txt.split("\n").filter(Boolean).map(function (l) { try { return JSON.parse(l); } catch (e) { return null; } })
+          .filter(function (o) { return o && o.event === "message" && o.message; })
+          .sort(function (a, b) { return (!!state.done[a.id] - !!state.done[b.id]) || b.time - a.time; });
+        if (!orders.length) { list.innerHTML = '<li><span class="empty">No orders yet. Enjoy the quiet.</span></li>'; return; }
+        list.innerHTML = orders.map(function (o) {
+          var p = o.message.split(" · "), done = !!state.done[o.id];
+          return '<li' + (done ? ' class="done"' : '') + '><span class="od"><b>' + esc(p[0]) + '</b><span class="meta"><span class="when">' + esc(p[1] || "") + '</span>' +
+            (p[2] ? ' · ' + esc(p[2]) : '') + ' · ' + ago(o.time) + '</span></span>' +
+            '<button class="tick" data-act="done" data-v="' + esc(o.id) + '" data-key="done-' + esc(o.id) + '" aria-pressed="' + done + '">' + (done ? "Undo" : "Done") + '</button></li>';
+        }).join("");
+        restoreFocus();
+      })
+      .catch(function () { list.innerHTML = '<li><span class="empty">Couldn\'t load orders. Check your connection and tap Refresh.</span></li>'; });
+  }
+  function showView(v) {
+    var orders = v === "orders";
+    $("menuview").hidden = orders;
+    $("ordersview").hidden = !orders;
+    document.querySelector(".orderslink").hidden = orders;
+    clearInterval(pollTimer);
+    if (orders) { loadOrders(); pollTimer = setInterval(loadOrders, 15000); }
+    if (location.hash !== (orders ? "#orders" : "")) history.replaceState(null, "", orders ? "#orders" : location.pathname + location.search);
+  }
   function detailHTML(d, c) {
     var spec = '<dl class="spec">' + c.items.map(function (i, k) { return '<div style="--k:' + k + '"><dt>' + esc(i.n) + '</dt><dd>' + amountText(i) + spoonHint(i) + '</dd></div>'; }).join("") + '</dl>';
     var opts = "";
     if (hasAlcohol(d)) opts += segHTML(d, "str", "Strength", [["reg", "Regular"], ["light", "Light"]]);
     if (hasSweet(d)) opts += segHTML(d, "sw", "Sweetness", [["less", "Less"], ["reg", "Regular"], ["more", "More"]]);
     var how = '<p class="how">' + howText(d) + '</p>' + (d.tl ? '<p class="tl"><span>Tastes like</span> ' + emojiHTML(d.tl) + '</p>' : "");
-    return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '">' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how + '</div></div></div>';
+    return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '">' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how +
+      '<button class="orderbtn" data-act="order" data-id="' + d.id + '" data-key="order-' + d.id + '">Order this</button></div></div></div>';
   }
   function statsHTML(d, c) {
     var s = '<span class="stat"><b>' + c.oz.toFixed(1) + '</b> oz drink</span>';
@@ -518,12 +634,29 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       save(); renderBar(); renderMenu();
     }
     else if (act === "surprise") { surprise(); }
+    else if (act === "order") { startOrder(id); }
+    else if (act === "when") { askName(v); }
+    else if (act === "place") { placeOrder(); }
+    else if (act === "place-retry") { sendOrder(); }
+    else if (act === "closedlg") { $("orderdlg").close(); }
+    else if (act === "view") { showView(v); window.scrollTo(0, 0); }
+    else if (act === "refresh") { loadOrders(); }
+    else if (act === "done") {
+      focusKey = t.getAttribute("data-key");
+      if (state.done[v]) delete state.done[v]; else state.done[v] = true;
+      save(); loadOrders();
+    }
   });
 
   load();
   renderFilter();
   renderBar();
   renderMenu();
+  // Clicking the dim backdrop closes the order dialog; Enter in the name field places the order.
+  $("orderdlg").addEventListener("click", function (e) { if (e.target === this) this.close(); });
+  $("orderdlg").addEventListener("keydown", function (e) { if (e.key === "Enter" && e.target.id === "oname") { e.preventDefault(); placeOrder(); } });
+  window.addEventListener("hashchange", function () { showView(location.hash === "#orders" ? "orders" : "menu"); });
+  if (location.hash === "#orders") showView("orders");
 })();
 </script>
 </body>
