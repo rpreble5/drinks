@@ -59,7 +59,7 @@ svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-widt
 
 
 ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
-.drink { padding: 18px 0; border-bottom: 1px dashed var(--line); }
+.drink { padding: 14px 0; border-bottom: 1px dashed var(--line); }
 .row { display: flex; gap: 16px; align-items: flex-start; }
 .gl { width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; flex: none; background: var(--surface); background: color-mix(in srgb, var(--c) 24%, var(--bg)); }
 .gi { position: relative; display: inline-flex; width: 38px; height: 38px; transform-origin: 50% 85%; transition: transform .3s cubic-bezier(.3, 1.6, .5, 1); }
@@ -80,13 +80,13 @@ ul.menu { list-style: none; margin: 14px 0 0; padding: 0; }
 .name { display: block; font: 700 1.2rem/1.2 var(--display); letter-spacing: -.01em; }
 .name .i { display: inline-block; vertical-align: -2px; margin-left: 6px; width: 18px; height: 18px; color: var(--accent); transition: transform .2s; }
 .toggle[aria-expanded="true"] .name .i { transform: rotate(180deg); }
-.taste { display: block; font-size: .95rem; margin-top: 3px; }
+.taste { display: block; margin-top: 2px; font: italic 400 1.15rem/1.3 "Instrument Serif", Georgia, serif; color: var(--fg); }
 .iwrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease; }
 .drink.open .iwrap { grid-template-rows: 0fr; }
 .iclip { display: block; overflow: hidden; min-height: 0; }
-.ings { display: block; color: var(--muted); font-size: .85rem; padding-top: 6px; transition: opacity .2s ease; }
+.ings { display: block; color: var(--muted); font-size: .82rem; padding-top: 4px; transition: opacity .2s ease; }
 .drink.open .ings { opacity: 0; }
-.stats { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 6px; font-size: .85rem; color: var(--muted); }
 .stat { white-space: nowrap; }
 .stat b { color: var(--fg); font-weight: 600; }
 .stat.mod { color: var(--accent); font-weight: 600; }
@@ -112,6 +112,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 .seg button { border: 0; border-bottom: 2px solid transparent; background: none; border-radius: 0; min-height: 38px; padding: 0; font-size: .92rem; color: var(--muted); }
 .seg button[aria-pressed="true"] { border-bottom-color: var(--accent); color: var(--fg); font-weight: 600; }
 .how { margin: 0; font-size: .85rem; color: var(--muted); }
+.yield { margin: 0 0 -8px; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .wrap { position: relative; }
 .orderslink { position: absolute; top: 0; right: 0; border: 0; background: none; padding: 4px 0; font-size: .75rem; color: var(--muted); opacity: .55; }
 .orderslink:hover { opacity: 1; }
@@ -538,12 +539,11 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     if (hasAlcohol(d)) opts += segHTML(d, "str", "Strength", [["reg", "Regular"], ["light", "Light"]]);
     if (hasSweet(d)) opts += segHTML(d, "sw", "Sweetness", [["less", "Less"], ["reg", "Regular"], ["more", "More"]]);
     var how = '<p class="how">' + howText(d) + '</p>' + (d.tl ? '<p class="tl"><span>Tastes like</span> ' + emojiHTML(d.tl) + '</p>' : "");
-    return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '">' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how +
+    return '<div class="dwrap"><div class="dclip"><div class="detail" id="p-' + d.id + '"><p class="yield">Makes a ' + c.oz.toFixed(1) + ' oz drink</p>' + spec + (opts ? '<div class="opts">' + opts + '</div>' : "") + how +
       '<button class="orderbtn" data-act="order" data-id="' + d.id + '" data-key="order-' + d.id + '">Order this</button></div></div></div>';
   }
   function statsHTML(d, c) {
-    var s = '<span class="stat"><b>' + c.oz.toFixed(1) + '</b> oz drink</span>';
-    s += hasAlcohol(d) ? '<span class="stat"><b>' + Math.round(c.abv) + '%</b> alcohol</span><span class="stat"><b>' + stdText(c.std) + '</b> standard drinks</span>' : '<span class="stat">No alcohol</span>';
+    var s = hasAlcohol(d) ? '<span class="stat"><b>' + Math.round(c.abv) + '%</b> alcohol</span><span class="stat"><b>' + stdText(c.std) + '</b> standard drinks</span>' : '<span class="stat">No alcohol</span>';
     modText(mods(d.id)).forEach(function (t) { s += '<span class="stat mod">' + esc(t) + '</span>'; });
     var miss = missing(d);
     if (miss.length) s += '<span class="stat out">Out of ' + esc(miss.map(function (n) { return n.charAt(0).toLowerCase() + n.slice(1); }).join(", ")) + '</span>';
