@@ -196,7 +196,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 <script>
 (function () {
   // abv: share of alcohol. sw: a sweetener the guest can turn up or down.
-  var CP = 0.24, CS = 0.16, MR = 0.16, GN = 0.40, BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AD = 0.225, BT = 0.45;
+  var ML = 0.32, CP = 0.24, CS = 0.16, MR = 0.16, GN = 0.40, BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AD = 0.225, BT = 0.45;
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   // Menu order: favorites first, then easy crowd-pleasers (pineapple drinks spaced out), tart sours, bitter, then stirred.
@@ -225,12 +225,18 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "bees-knees", name: "Bee's Knees", base: "Gin", glass: "coupe", color: "#f2d16b", method: "shaken", garnish: "a lemon twist", tip: "Honey syrup: stir equal parts honey and hot water until smooth. It keeps in the fridge.", tl: "🐝🍯🍋", foam: true,
       taste: "Bright and honeyed, with lemon and citrusy gin.",
       ing: [I("Las Californias Cítrico gin", 2, "oz", GN), I("Lemon juice", 0.75), I("Honey syrup", 0.75, "oz", 0, 1)] },
+    { id: "aviation", name: "Aviation", base: "Gin", glass: "coupe", color: "#e6e0ee", method: "shaken", garnish: "a Luxardo cherry", tip: "The classic version adds a splash of crème de violette, which turns it pale purple.", tl: "✈️🍒🍋",
+      taste: "Tart and floral, with cherry and citrus.",
+      ing: [I("Las Californias Cítrico gin", 2, "oz", GN), I("Maraschino liqueur", 0.5, "oz", ML), I("Lemon juice", 0.75)] },
     { id: "royal-hawaiian", name: "Royal Hawaiian", base: "Gin", glass: "tall", color: "#f1cf6e", method: "shaken", garnish: "a pineapple wedge, if you have one", tl: "🍍🌺🌰",
       taste: "Fruity and nutty, with pineapple, almond and bright citrus.",
       ing: [I("Las Californias Cítrico gin", 1.5, "oz", GN), I("Pineapple juice", 1), I("Lemon juice", 0.5), I("Orgeat", 0.5, "oz", 0, 1)] },
     { id: "el-diablo", name: "El Diablo", base: "Tequila", glass: "tall", color: "#7a2f5a", method: "shaken", garnish: "a lime wheel", tl: "😈🍇🌶️🫧",
       taste: "Fizzy and spicy, with dark berry.",
       ing: [I("Tequila", 1.5, "oz", TQ), I("Crème de cassis", 0.5, "oz", CS), I("Lime juice", 0.5), I("Ginger beer", 3, "top")] },
+    { id: "mary-pickford", name: "Mary Pickford", base: "Rum", glass: "coupe", color: "#f3a3a8", method: "shaken", garnish: "a Luxardo cherry", tl: "🍍🍒🎬",
+      taste: "Fruity and pink, with pineapple and cherry.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Pineapple juice", 1.5), I("Maraschino liqueur", 0.25, "oz", ML), I("Grenadine", 1, "tsp", 0, 1)] },
     { id: "bakers-tequila-sour", name: "Baker's Tequila Sour", base: "Tequila", glass: "rocks", color: "#d9535f", method: "shaken", garnish: "a lime wheel", tl: "🌵🍒🍋", foam: true,
       taste: "Tart and fruity, with a bitter edge.",
       ing: [I("Tequila", 2, "oz", TQ), I("Lime juice", 0.75), I("Grenadine", 0.75, "oz", 0, 1), I("Angostura bitters", 4, "dash", BT)] },
@@ -321,6 +327,9 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "full-monte", name: "Full Monte No. 2", base: "Whiskey", glass: "rocks", color: "#a5482a", method: "stirred", garnish: "an orange twist and a Luxardo cherry", tip: "Try black walnut bitters in place of the Angostura.", tl: "🍊🥃🍬",
       taste: "Stirred and bittersweet, amaro-forward.",
       ing: [I("Amaro Montenegro", 2, "oz", AM), I("Bourbon", 1, "oz", BO), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "fancy-free", name: "Fancy Free", base: "Whiskey", glass: "rocks", color: "#b9622c", method: "stirred", garnish: "an orange peel", tip: "The classic recipe also adds 2 dashes of orange bitters.", tl: "🥃🍒🍊",
+      taste: "Spirit-forward, with a cherry-almond sweetness.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Maraschino liqueur", 0.5, "oz", ML), I("Angostura bitters", 2, "dash", BT)] },
     { id: "rum-old-fashioned", name: "Pineapple Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#e3a63e", method: "stirred", garnish: "an orange peel and a Luxardo cherry", tl: "🍍🥃🔥",
       taste: "Spirit-forward, with a pineapple note.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
