@@ -196,7 +196,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
 <script>
 (function () {
   // abv: share of alcohol. sw: a sweetener the guest can turn up or down.
-  var ML = 0.32, CP = 0.24, CS = 0.16, MR = 0.16, GN = 0.40, BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AD = 0.225, BT = 0.45;
+  var L43 = 0.31, FG = 0.20, AO = 0.11, ML = 0.32, CP = 0.24, CS = 0.16, MR = 0.16, GN = 0.40, BO = 0.45, TQ = 0.40, RM = 0.40, AM = 0.23, OL = 0.30, AD = 0.225, BT = 0.45;
   function I(n, a, u, abv, sw) { return { n: n, a: a, u: u || "oz", abv: abv || 0, sw: !!sw }; }
 
   // Menu order: favorites first, then easy crowd-pleasers (pineapple drinks spaced out), tart sours, bitter, then stirred.
@@ -337,6 +337,48 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "monte-whiskey-sour", name: "Monte Whiskey Sour", base: "Whiskey", glass: "rocks", color: "#b4532a", method: "shaken", garnish: "an orange twist and a Luxardo cherry", tl: "🥃🍊🍋", foam: true,
       taste: "Bittersweet and tart, with an orange note.",
       ing: [I("Bourbon", 1.5, "oz", BO), I("Amaro Montenegro", 1, "oz", AM), I("Lemon juice", 0.5)] },
+    { id: "vanilla-bourbon-sour", name: "Vanilla Bourbon Sour", base: "Whiskey", glass: "coupe", color: "#e3b268", method: "shaken", garnish: "a lemon twist", tl: "🥃🍋🍦",
+      taste: "Tart and smooth, with vanilla and citrus.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Licor 43", 0.75, "oz", L43, 1), I("Lemon juice", 0.75), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "licor-43-mule", name: "Licor 43 Mule", base: "Whiskey", glass: "tall", color: "#ddb05a", method: "built", garnish: "a lemon wheel", tl: "🍋🫧✨",
+      taste: "Sweet and fizzy, with vanilla and ginger.",
+      ing: [I("Bourbon", 1, "oz", BO), I("Licor 43", 1, "oz", L43, 1), I("Lemon juice", 0.5), I("Ginger beer", 3, "top")] },
+    { id: "licor-43-margarita", name: "Licor 43 Margarita", base: "Tequila", glass: "rocks", color: "#e9c27a", method: "shaken", garnish: "a lime wheel", tl: "🌵🍋🍦",
+      taste: "Tart and rounded, with vanilla.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Licor 43", 0.5, "oz", L43, 1), I("Lime juice", 0.75), I("Orange liqueur", 0.25, "oz", OL)] },
+    { id: "hazelnut-bourbon-sour", name: "Hazelnut Bourbon Sour", base: "Whiskey", glass: "coupe", color: "#c78b4a", method: "shaken", garnish: "a lemon twist", tl: "🥃🌰🍋",
+      taste: "Tart and toasty, with hazelnut.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Frangelico", 0.5, "oz", FG, 1), I("Lemon juice", 0.75), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "hazelnut-amaro-sour", name: "Hazelnut Amaro Sour", base: "Whiskey", glass: "coupe", color: "#c4713a", method: "shaken", garnish: "an orange twist", tl: "🍊🌰🍋",
+      taste: "Bittersweet and nutty, with lemon.",
+      ing: [I("Bourbon", 1, "oz", BO), I("Amaro Montenegro", 0.5, "oz", AM), I("Frangelico", 0.5, "oz", FG, 1), I("Lemon juice", 0.75)] },
+    { id: "hazelnut-ginger-highball", name: "Hazelnut Ginger Highball", base: "Amaro", glass: "tall", color: "#d29a52", method: "built", garnish: "a lemon wheel", tl: "🌰🫧🍋",
+      taste: "Fizzy and nutty, with lemon and ginger.",
+      ing: [I("Frangelico", 1.5, "oz", FG, 1), I("Lemon juice", 0.5), I("Ginger beer", 4, "top")] },
+    { id: "paper-plane", name: "Paper Plane", base: "Whiskey", glass: "coupe", color: "#ee7a36", method: "shaken", tip: "The classic recipe uses Amaro Nonino in place of the Montenegro.", tl: "✈️🍊🍋",
+      taste: "Bright and bittersweet, with bourbon and lemon.",
+      ing: [I("Bourbon", 0.75, "oz", BO), I("Aperol", 0.75, "oz", AO), I("Amaro Montenegro", 0.75, "oz", AM), I("Lemon juice", 0.75)] },
+    { id: "aperol-pineapple-sour", name: "Aperol Pineapple Sour", base: "Rum", glass: "coupe", color: "#f08a46", method: "shaken", garnish: "a lime wheel", tl: "🍍🍊🍋",
+      taste: "Tart and fruity, with pineapple and a little bitterness.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Aperol", 0.75, "oz", AO, 1), I("Lime juice", 0.75), I("Orgeat", 0.25, "oz", 0, 1)] },
+    { id: "aperol-tonic", name: "Aperol Tonic", base: "Amaro", glass: "tall", color: "#f2733a", method: "built", garnish: "an orange slice", tl: "🍊🫧✨",
+      taste: "Light and bittersweet, with orange.",
+      ing: [I("Aperol", 2, "oz", AO), I("Tonic water", 4, "top")] },
+    { id: "maraschino-bourbon-sour", name: "Maraschino Bourbon Sour", base: "Whiskey", glass: "coupe", color: "#b5483a", method: "shaken", garnish: "a Luxardo cherry", tl: "🥃🍒🍋",
+      taste: "Tart and dry, with cherry and almond.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Lemon juice", 0.75), I("Maraschino liqueur", 0.5, "oz", ML, 1), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "pineapple-maraschino-daiquiri", name: "Pineapple Maraschino Daiquiri", base: "Rum", glass: "coupe", color: "#eab04d", method: "shaken", garnish: "a lime wheel", tl: "🍍🍒🍋",
+      taste: "Dry and tart, with pineapple and a hint of cherry.",
+      ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Maraschino liqueur", 0.5, "oz", ML, 1)] },
+    { id: "maraschino-margarita", name: "Maraschino Margarita", base: "Tequila", glass: "rocks", color: "#d9685a", method: "shaken", garnish: "a lime wheel", tl: "🌵🍒🍋",
+      taste: "Tart and crisp, with almond and cherry.",
+      ing: [I("Tequila", 1.5, "oz", TQ), I("Lime juice", 0.75), I("Maraschino liqueur", 0.5, "oz", ML, 1), I("Orgeat", 0.25, "oz", 0, 1)] },
+    { id: "maraschino-mule", name: "Maraschino Mule", base: "Whiskey", glass: "tall", color: "#c8584a", method: "built", garnish: "a lemon wheel", tl: "🍒🫧🍋",
+      taste: "Fizzy and tart, with cherry and ginger.",
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Maraschino liqueur", 0.5, "oz", ML, 1), I("Lemon juice", 0.5), I("Ginger beer", 3, "top")] },
+    { id: "monte-maraschino-sour", name: "Monte Maraschino Sour", base: "Whiskey", glass: "coupe", color: "#c4503c", method: "shaken", garnish: "a Luxardo cherry", tl: "🍊🍒🍋",
+      taste: "Bittersweet and tart, with cherry.",
+      ing: [I("Bourbon", 1.25, "oz", BO), I("Amaro Montenegro", 0.5, "oz", AM), I("Maraschino liqueur", 0.5, "oz", ML, 1), I("Lemon juice", 0.75)] },
     { id: "monte-manhattan", name: "Monte Manhattan", base: "Whiskey", glass: "coupe", color: "#8f3d22", method: "stirred", garnish: "an orange twist and a Luxardo cherry", tip: "Try adding a dash of black walnut bitters.", tl: "🥃🍊🌙",
       taste: "Stirred and rich, sweeter than a Manhattan.",
       ing: [I("Amaro Montenegro", 1.5, "oz", AM), I("Bourbon", 1.5, "oz", BO)] },
@@ -351,11 +393,21 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "old-fashioned", name: "Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c9791b", method: "stirred", garnish: "an orange peel and a Luxardo cherry", tip: "Try swapping a dash of Angostura for black walnut bitters.", tl: "🥃🍊🕰️",
       taste: "Spirit-forward, lightly sweet and bitter.",
-      ing: [I("Bourbon", 2, "oz", BO), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] }
+      ing: [I("Bourbon", 2, "oz", BO), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "vanilla-old-fashioned", name: "Vanilla Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c98a3a", method: "stirred", garnish: "an orange peel", tl: "🥃🍦🍊",
+      taste: "Spirit-forward, with vanilla and citrus.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Licor 43", 0.5, "oz", L43, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 2, "dash", BT)] },
+    { id: "hazelnut-old-fashioned", name: "Hazelnut Old Fashioned", base: "Whiskey", glass: "rocks", color: "#b9763a", method: "stirred", garnish: "an orange peel", tl: "🥃🌰🍊",
+      taste: "Spirit-forward, with hazelnut and walnut.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Frangelico", 0.5, "oz", FG, 1), I("Black walnut bitters", 1, "dash", BT), I("Angostura bitters", 1, "dash", BT)] },
+    { id: "hazelnut-rum-old-fashioned", name: "Hazelnut Rum Old Fashioned", base: "Rum", glass: "rocks", color: "#d9983f", method: "stirred", garnish: "an orange peel", tl: "🍍🌰🥃",
+      taste: "Spirit-forward, with pineapple and hazelnut.",
+      ing: [I("Stiggins pineapple rum", 1.5, "oz", RM), I("Frangelico", 0.5, "oz", FG, 1), I("Angostura bitters", 2, "dash", BT)] }
   ];
   var STORE = "november-back-bar-v6";
-  var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila", "Gin"];
-  var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura|Las Californias|Campari)/;
+  var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila", "Gin", "Aperol", "Licor 43", "Frangelico"];
+  var BY_ING = { "Montenegro": "Amaro Montenegro", "Aperol": "Aperol", "Licor 43": "Licor 43", "Frangelico": "Frangelico" };
+  var PROPER = /^(Stiggins|Jack Daniel|Amaro Montenegro|Angostura|Las Californias|Campari|Licor 43|Frangelico|Aperol)/;
   var SODA = 2; // oz of soda water that lengthens a light shaken drink
   var UV = { dash: 0.03, drop: 0.02, squeeze: 0.25, pinch: 0, rim: 0, tsp: 1 / 6 };
   var DIL = { shaken: 1.25, stirred: 1.2, built: 1, hot: 1 };
@@ -615,7 +667,7 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
   }
   function shown() {
     if (state.base === "All") return DRINKS;
-    if (state.base === "Montenegro") return DRINKS.filter(function (d) { return d.ing.some(function (i) { return i.n === "Amaro Montenegro"; }); });
+    if (BY_ING[state.base]) return DRINKS.filter(function (d) { return d.ing.some(function (i) { return i.n === BY_ING[state.base]; }); });
     return DRINKS.filter(function (d) { return d.base === state.base; });
   }
   function renderFilter() {
