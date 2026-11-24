@@ -355,6 +355,15 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
     { id: "cuba-libre", name: "Cuba Libre", base: "Rum", glass: "tall", color: "#7a4326", method: "built", garnish: "a lime wedge", tip: "It's usually made with white or golden rum. Squeeze in the lime and drop it in.", tl: "🇨🇺🥤🍋",
       taste: "Sweet and fizzy, with rum and lime.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Cola", 4, "top")] },
+    { id: "rye-tai", name: "Rye Tai", base: "Whiskey", glass: "rocks", color: "#d98a3a", method: "shaken", garnish: "a pineapple wedge", tip: "Adapted from Nick Brown's 2017 recipe at The Spaniard in New York, with Licor 43 added on Paul Stubblebine's suggestion. It's made with rye; bourbon is a softer swap. Float the bitters on top.", tl: "🍍🥃🌴",
+      taste: "Fruity and nutty, with pineapple and spice.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Orgeat", 0.5, "oz", 0, 1), I("Amaro Montenegro", 0.17, "oz", AM), I("Licor 43", 0.17, "oz", L43, 1), I("Pineapple juice", 0.75), I("Lemon juice", 0.75), I("Angostura bitters", 7, "dash", BT)] },
+    { id: "vanilla-grapefruit-daiquiri", name: "Vanilla & Grapefruit Daiquiri", base: "Rum", glass: "coupe", color: "#f2b896", method: "shaken", garnish: "a grapefruit twist", tip: "Created by Simon Difford in London in 2003. It's made with a light gold rum, and a dash of daiquiri bitters is optional.", tl: "🍦🍊🍹",
+      taste: "Tart and clean, with vanilla and grapefruit.",
+      ing: [I("Stiggins pineapple rum", 1.67, "oz", RM), I("Licor 43", 0.5, "oz", L43, 1), I("Lime juice", 0.5), I("Grapefruit juice", 0.5), I("Simple syrup", 0.17, "oz", 0, 1)] },
+    { id: "hornitos-lau", name: "Hornitos Lau", base: "Tequila", glass: "tall", color: "#ead27a", method: "shaken", garnish: "a mint sprig", tip: "Created in 2005 by Jaspar Eyears at Bar Tiki in Mexico City. Shake it with about 10 mint leaves and serve it over crushed ice. It's made with reposado tequila.", tl: "🌿🌵🍋",
+      taste: "Minty and tart, with vanilla.",
+      ing: [I("Tequila", 1.67, "oz", TQ), I("Licor 43", 1.25, "oz", L43, 1), I("Lime juice", 0.42)] },
     { id: "elixir-tropical", name: "Elixir Tropical", base: "Rum", glass: "coupe", color: "#efc9a0", method: "shaken", garnish: "mint and a little grated nutmeg", tip: "Created in 2017 by Maurizio la Spina in Naples. It's made with light rum and 3 mint leaves shaken in.", tl: "🌴🌰🌿",
       taste: "Bright and nutty, with lime and almond.",
       ing: [I("Stiggins pineapple rum", 2, "oz", RM), I("Lime juice", 0.75), I("Orgeat", 0.75, "oz", 0, 1), I("Maraschino liqueur", 0.25, "oz", ML), I("Angostura bitters", 3, "dash", BT)] },
@@ -384,7 +393,10 @@ dl.spec .hint { margin-left: 6px; font-size: .78rem; font-weight: 400; opacity: 
       ing: [I("Bourbon", 2, "oz", BO), I("Simple syrup", 0.25, "oz", 0, 1), I("Angostura bitters", 2, "dash", BT)] },
     { id: "frangelico-old-fashioned", name: "Frangelico Old Fashioned", base: "Whiskey", glass: "rocks", color: "#b9763a", method: "stirred", garnish: "an orange twist", tip: "Sother Teague's recipe, with Frangelico in place of sugar. He uses mole bitters; walnut bitters are a close swap.", tl: "🥃🌰🍊",
       taste: "Spirit-forward, with hazelnut and a little spice.",
-      ing: [I("Bourbon", 1.5, "oz", BO), I("Frangelico", 0.5, "oz", FG, 1), I("Angostura bitters", 1, "dash", BT), I("Black walnut bitters", 1, "dash", BT)] }
+      ing: [I("Bourbon", 1.5, "oz", BO), I("Frangelico", 0.5, "oz", FG, 1), I("Angostura bitters", 1, "dash", BT), I("Black walnut bitters", 1, "dash", BT)] },
+    { id: "licor-43-old-fashioned", name: "43 Old Fashioned", base: "Whiskey", glass: "rocks", color: "#c47a36", method: "stirred", garnish: "an orange twist", tip: "Created by Keith Larry at Dandelion in New York. It's made with rye; bourbon is a softer swap.", tl: "🥃🍦🍊",
+      taste: "Spirit-forward, with vanilla and spice.",
+      ing: [I("Bourbon", 2, "oz", BO), I("Licor 43", 0.5, "oz", L43, 1), I("Angostura bitters", 2, "dash", BT)] }
   ];
   var STORE = "november-back-bar-v6";
   var BASES = ["All", "Montenegro", "Whiskey", "Rum", "Tequila", "Gin", "Campari", "Licor 43", "Frangelico"];
